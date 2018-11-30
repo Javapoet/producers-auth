@@ -1,0 +1,18 @@
+{
+
+      "server": "0.0.0.0"
+    , "port"  : 8080
+
+    , "contexts": [
+
+        {
+              "context-path": "/login"
+            , "webapp-path": "../build/exploded"
+            , "virtual-hosts": [
+                "localhost"
+            ]
+        }
+        
+    ]
+
+}

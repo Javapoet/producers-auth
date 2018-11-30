@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<web-app 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+  xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee"
+  xmlns:c="http://java.sun.com/jsp/jstl/core"
+  xmlns:fmt="http://java.sun.com/jsp/jstl/fmt"
+  xmlns:web="http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+  version="3.1"
+>
+
+  <description>Producers Auth</description>
+  <display-name>Producers Auth</display-name>
+
+<!--
+    Set session timeout in minutes.
+
+    https://www.vojtechruzicka.com/session-fixation-attack/
+    You can define how should the session ID be transmitted in web.xml.
+    There are three options - URL, COOKIE, SSL.
+    To prevent session fixation attack using URL parameter, you should set tracking mode either to COOKIE or SSL.
+-->
+  <session-config>
+
+    <session-timeout>60</session-timeout>
+    <tracking-mode>COOKIE</tracking-mode>
+
+    <cookie-config>
+      <secure>false</secure>
+      <http-only>true</http-only>
+    </cookie-config>
+
+  </session-config>
+
+  <servlet>
+    <servlet-name>init</servlet-name>
+    <servlet-class>com.producersmarket.servlet.ParentServlet</servlet-class>
+    <init-param>
+      <param-name>init.properties</param-name>
+      <param-value>WEB-INF/conf/init.properties</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <servlet>
+    <servlet-name>LoginServlet</servlet-name>
+    <servlet-class>com.producersmarket.servlet.LoginServlet</servlet-class>
+    <!--async-supported>true</async-supported-->
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>LoginServlet</servlet-name>
+    <url-pattern>login</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>LogoutServlet</servlet-name>
+    <servlet-class>com.producersmarket.servlet.LogoutServlet</servlet-class>
+    <!--async-supported>true</async-supported-->
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>LogoutServlet</servlet-name>
+    <url-pattern>logout</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>PasswordResetServlet</servlet-name>
+    <servlet-class>com.producersmarket.servlet.PasswordResetServlet</servlet-class>
+    <!--async-supported>true</async-supported-->
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>PasswordResetServlet</servlet-name>
+    <url-pattern>/password-reset</url-pattern>
+    <url-pattern>/password-reset/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>ResetPasswordServlet</servlet-name>
+    <servlet-class>com.producersmarket.servlet.ResetPasswordServlet</servlet-class>
+    <!--async-supported>true</async-supported-->
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ResetPasswordServlet</servlet-name>
+    <url-pattern>reset-password</url-pattern>
+  </servlet-mapping>
+
+<!--
+  <security-constraint>
+    <web-resource-collection>
+      <url-pattern>/*</url-pattern>
+    </web-resource-collection>
+    <user-data-constraint>
+      <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+    </user-data-constraint>
+  </security-constraint>
+-->
+
+<!-- Listeners -->
+
+<!--
+-->
+  <listener>
+    <listener-class>com.producersmarket.listener.SessionListener</listener-class>
+  </listener>
+
+</web-app>
