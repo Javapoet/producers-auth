@@ -1,4 +1,3 @@
-
 package com.producersmarket.servlet;
 
 import java.io.IOException;
@@ -16,22 +15,29 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import com.producersmarket.database.LoginDatabaseManager;
-//import com.producersmarket.blog.model.BlogPost;
-//import com.producersmarket.blog.model.User;
-//import com.producersmarket.model.User;
+import com.producersmarket.database.SessionDatabaseManager;
+import com.producersmarket.model.Session;
 
 public class LoginServlet extends ParentServlet {
 
     private static final Logger logger = LogManager.getLogger();
-
     private static final String EMPTY = "";
     private static final String SPACE = " ";
     private static final String COMMA = ",";
     private static final String LEFT_SQUARE_BRACKET = "[";
     private static final String RIGHT_SQUARE_BRACKET = "]";
 
+    private String loginPage = null;
+    private String loggedInPage = null;
+
     public void init(ServletConfig config) throws ServletException {
         logger.debug("init("+config+")");
+
+        this.loginPage = config.getInitParameter("loginPage");
+        this.loggedInPage = config.getInitParameter("loggedInPage");
+
+        logger.debug("loginPage = "+loginPage);
+        logger.debug("loggedInPage = "+loggedInPage);
 
         super.init(config);
     }
@@ -41,7 +47,7 @@ public class LoginServlet extends ParentServlet {
 
         try {
 
-            includeUtf8(request, response, "/view/login.jsp");
+            includeUtf8(request, response, this.loginPage);
 
         } catch(java.io.FileNotFoundException e) {
             StringWriter stringWriter = new StringWriter();
@@ -62,7 +68,7 @@ public class LoginServlet extends ParentServlet {
 
         if(email == null || email.equals(EMPTY)) {
             request.setAttribute("errorMessage", "Please Enter an Email Address");
-            includeUtf8(request, response, "/view/login.jsp");
+            includeUtf8(request, response, this.loginPage);
             return;
         } else {
             // make sure the email is lowercase
@@ -79,8 +85,8 @@ public class LoginServlet extends ParentServlet {
               && passwordHash.equals(password)
             ) {
 
-                HttpSession session = request.getSession(true); // create the session
-                logger.debug("session.getId() = "+session.getId());
+                HttpSession httpSession = request.getSession(true); // create the session
+                logger.debug("httpSession.getId() = "+httpSession.getId());
 
                 //User user = UserDatabaseManager.selectUserByEmail(email);
                 int userId = LoginDatabaseManager.selectUserIdByEmail(email);
@@ -91,22 +97,66 @@ public class LoginServlet extends ParentServlet {
                 if(userId != -1) {
 
                     //logger.debug("user.getId() = "+user.getId());
-
-                    //session.setAttribute("userId", user.getId());
-                    session.setAttribute("userId", userId);
+                    //httpSession.setAttribute("userId", user.getId());
                     //request.setAttribute("user", user);
+                    httpSession.setAttribute("userId", userId);
+
+                    String serverInfo = getServletContext().getServerInfo();
+                    String serverName = request.getServerName();
+                    int serverPort = request.getServerPort();
+                    String accept = request.getHeader("Accept");
+                    String acceptEncoding = request.getHeader("Accept-Encoding");
+                    String acceptCharset = request.getHeader("Accept-Charset");
+                    String acceptLanguage = request.getHeader("Accept-Language");
+                    String host = request.getHeader("Host");
+                    String userAgent = request.getHeader("User-Agent");
+                    String referer = request.getHeader("Referer");
+                    String locale = (request.getLocale()).toString();
+                    String characterEncoding = request.getCharacterEncoding();
+                    String remoteAddr = request.getRemoteAddr();
+                    String protocol = request.getProtocol();
+
+                    logger.debug("accept = " + accept);
+                    logger.debug("acceptEncoding = " + acceptEncoding);
+                    logger.debug("acceptCharset = " + acceptCharset);
+                    logger.debug("acceptLanguage = " + acceptLanguage);
+                    logger.debug("host = " + host);
+                    logger.debug("userAgent = " + userAgent);
+                    logger.debug("referer = " + referer);
+                    logger.debug("locale = " + locale);
+                    logger.debug("characterEncoding = " + characterEncoding);
+                    logger.debug("remoteAddr = " + remoteAddr);
+                    logger.debug("serverInfo = " + serverInfo);
+                    logger.debug("serverName = " + serverName);
+                    logger.debug("serverPort = " + serverPort);
+                    logger.debug("protocol = " + protocol);
+
+                    Session session = new Session();
+                    session.setUserId(userId);
+                    session.setSessionId(httpSession.getId());
+                    session.setServerInfo(serverInfo);
+                    session.setServerName(serverName);
+                    session.setServerPort(serverPort);
+                    session.setRemoteAddr(remoteAddr);
+                    session.setLocale(locale);
+                    session.setCharacterEncoding(characterEncoding);
+                    session.setUserAgent(userAgent);
+                    session.setAccept(accept);
+                    session.setAcceptEncoding(acceptEncoding);
+                    session.setAcceptCharset(acceptCharset);
+                    session.setAcceptLanguage(acceptLanguage);
+                    session.setHost(host);
+                    session.setReferer(referer);
+                    session.setProtocol(protocol);
 
                     /*
-                    List<BlogPost> blogPostList = BlogPostDatabaseManager.selectBlogPostsByUserId(user.getId());
-                    if(blogPostList != null) {
-                        logger.debug("blogPostList.size() = "+blogPostList.size());
-                        request.setAttribute("blogPostList", blogPostList);
-                        user.setBlogPostList(blogPostList);
-                    }
+                    int sessionId = SessionManager.insert(session);
+                    SessionDatabaseManager.insertSession(user.getId(), session.getId());
                     */
+                    SessionDatabaseManager.insert(session);
 
                     /*
-                    UserManager.updateUserLoggedIn(user.getId(), session.getId());
+                    LoginDatabaseManager.updateUserLoggedIn(user.getId(), session.getId());
 
                     // Request attributes
                     //request.setAttribute("userId", user.getId());
@@ -118,33 +168,20 @@ public class LoginServlet extends ParentServlet {
                     //request.setAttribute("googleId", googleIdString);
                     //request.setAttribute("googleId", id);
                     //request.setAttribute("googleAccessToken", accessToken);
-
-                    // Session attributes
-                    //session.setAttribute("user", user);
-                    //session.setAttribute("googleId", googleIdString);
-                    //session.setAttribute("googleId", id);
-                    //session.setAttribute("humanApiAccessToken", humanApiAccessToken);
-                    //session.setAttribute("humanApiPublicToken", humanApiPublicToken);
-                    //session.setAttribute("googleAccessToken", accessToken);
-
-                    ////includeUtf8(request, response, "/view/landing.jsp");
                     //logger.debug("backendUrl = "+backendUrl);
                     //response.sendRedirect(backendUrl + "/store");
                     */
 
-                    includeUtf8(request, response, "/view/user.jsp");
+                    includeUtf8(request, response, this.loggedInPage);
 
                     return;
                     
-                } // if(user != null) {
-
-                //includeUtf8(request, response, "/land.jsp");
-                include(request, response, "/view/blog-list.jsp");
+                } // if(userId != null) {
 
             } else { // if(passwordHash != null
 
                 request.setAttribute("errorMessage", "Incorrect password");
-                includeUtf8(request, response, "/view/login.jsp");
+                includeUtf8(request, response, this.loginPage);
                 return;
 
             } // if(passwordHash != null
@@ -165,13 +202,7 @@ public class LoginServlet extends ParentServlet {
             logger.error(stringWriter.toString());
         }
 
-        //writeOut(response, "-1");
+        response.sendError(HttpServletResponse.SC_NOT_FOUND);
     }
-
-    /*
-        public String doubleQuotes(String string) {
-        return new StringBuilder().append("\"").append(string).append("\"").toString();
-    }
-    */
 
 }

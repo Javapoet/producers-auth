@@ -21,6 +21,37 @@ public class LoginDatabaseManager {
     private static final Logger logger = LogManager.getLogger();
     private static final String className = LoginDatabaseManager.class.getSimpleName();
 
+    public static void updateUserLoggedIn(int userId, String sessionId) throws SQLException, Exception {
+        logger.debug("updateUserLoggedIn("+userId+", '"+sessionId+"')");
+
+        ConnectionManager connectionManager = new ConnectionManager(className);
+        logger.debug("connectionManager = "+connectionManager);
+
+        try {
+
+            String sql = "UPDATE user SET session_id = ? WHERE id = ?";
+            PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
+            preparedStatement.setString(1, sessionId);
+            preparedStatement.setInt(2, userId);
+            preparedStatement.executeUpdate();
+
+        } catch(Exception e) {
+            StringWriter stringWriter = new StringWriter();
+            PrintWriter printWriter = new PrintWriter(stringWriter);
+            e.printStackTrace(printWriter);
+            logger.error(stringWriter.toString());
+        } finally {
+            try {
+                connectionManager.commit();
+            } catch(Exception exception) {
+                StringWriter stringWriter = new StringWriter();
+                PrintWriter printWriter = new PrintWriter(stringWriter);
+                exception.printStackTrace(printWriter);
+                logger.error(stringWriter.toString());
+            }
+        }
+    }
+
     public static int selectUserIdByEmail(String email) throws SQLException, Exception {
         logger.debug("selectUserIdByEmail("+email+")");
 

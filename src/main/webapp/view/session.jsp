@@ -7,14 +7,14 @@
 <%
 
     HttpSession httpSession = request.getSession(false);
-    Object userIdObject = null;
+    Integer userIdInteger = null;
 
     if(
       httpSession != null
-      && (userIdObject = httpSession.getAttribute("userId")) != null
+      && (userIdInteger = (Integer)httpSession.getAttribute("userId")) != null
     ) {
 
-        logger.debug("userIdObject = "+userIdObject);
+        logger.debug("userIdInteger = "+userIdInteger);
     }
 
 %>

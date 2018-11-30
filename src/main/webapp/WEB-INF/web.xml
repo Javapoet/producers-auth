@@ -47,10 +47,19 @@
     <servlet-name>LoginServlet</servlet-name>
     <servlet-class>com.producersmarket.servlet.LoginServlet</servlet-class>
     <!--async-supported>true</async-supported-->
+    <init-param>
+      <param-name>loginPage</param-name>
+      <param-value>/view/login.jsp</param-value>
+    </init-param>
+    <init-param>
+      <param-name>loggedInPage</param-name>
+      <param-value>/view/loggedIn.jsp</param-value>
+    </init-param>
   </servlet>
   <servlet-mapping>
     <servlet-name>LoginServlet</servlet-name>
     <url-pattern>login</url-pattern>
+    <url-pattern></url-pattern>
   </servlet-mapping>
 
   <servlet>

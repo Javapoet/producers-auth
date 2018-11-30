@@ -9,83 +9,64 @@
         <legend>
           Login
         </legend>
-
 <%
+
     String fieldName = "username";
     String fieldLabel = "Username";
     String parameterValue = null;
+
 %>
-          <p>
-                <label for="<%= fieldName %>">
-                  <%= fieldLabel %>
-                </label>
+        <p>
 
-              <input type="email" name="<%= fieldName %>" id="<%= fieldName %>" placeholder="name@example.com"
-                <%
-                    parameterValue = request.getParameter(fieldName);
-                    if(parameterValue != null) {
-                %>  
-                value="<%= parameterValue %>"
-                <%
-                    }
-                %>
-              />
+          <label for="<%= fieldName %>">
+            <%= fieldLabel %>
+          </label>
 
-          </p>
+          <input type="email" name="<%= fieldName %>" id="<%= fieldName %>" placeholder="name@example.com"
+            <%
+                parameterValue = request.getParameter(fieldName);
+                if(parameterValue != null) {
+            %>  
+            value="<%= parameterValue %>"
+            <%
+                }
+            %>
+          />
 
+        </p>
 <%
+
     fieldName = "password";
     fieldLabel = "Password";
     parameterValue = null;
+
 %>
-          <p>
+        <p>
 
-                <label for="<%= fieldName %>">
-                  <%= fieldLabel %>
-                </label>
+          <label for="<%= fieldName %>">
+            <%= fieldLabel %>
+          </label>
 
-              <input type="password" name="<%= fieldName %>" id="<%= fieldName %>" placeholder="********"
-                <%
-                    parameterValue = request.getParameter(fieldName);
-                    if(parameterValue != null) {
-                %>  
-                value="<%= parameterValue %>"
-                <%
-                    }
-                %>
-              />
+          <input type="password" name="<%= fieldName %>" id="<%= fieldName %>" placeholder="********"
+            <%
+                parameterValue = request.getParameter(fieldName);
+                if(parameterValue != null) {
+            %>  
+            value="<%= parameterValue %>"
+            <%
+                }
+            %>
+          />
 
-          </p>
+        </p>
 
-          <p>
-<%--
-          <p class="align-center">
-              <div align="center" style="padding:0px 10px;"><button type="submit" class="btn btn-info btn_phat" style="display: block; width: 100%;">Sign In</button></div>
-              <input type="submit" value="Sign In" />
---%>
-              <input type="submit" value="Login" onclick="valid=filterLogin();return valid;" />
+        <p>
+          <input type="submit" value="Login" onclick="valid=filterLogin();return valid;" />
+        </p>
 
-          </p>
-
-          <p style="padding: 10px 0px;">
-              <a href="<%= contextUrl %>/reset-password">Reset Password</a>
-          </p>
-
-<%--
-            <div class="cell links" style="display: table-cell; margin: auto; padding-top: 10px; vertical-align: middle;">
-            </div>
-          <div style="display: table-row;">
-            <div class="cell" style="display: table-cell; margin: auto; margin-left: 0px; text-align: center; vertical-align: middle;">
-              or
-            </div>
-          </div>
-
-          <div style="display: table-row;">
-            <div class="cell" style="display: table-cell; margin-left: 0px; text-align: left;">
-              <input type="button" value="Create an Account" onclick="document.location='/register.jsp'" />
-            </div>
-          </div>
---%>
+        <p style="padding: 10px 0px;">
+          <a href="<%= contextUrl %>/reset-password">Reset Password</a>
+        </p>
 
 <%--
           <div style="display: table-row;">
@@ -126,14 +107,8 @@
 --%>
 
 
-<%--
---%>
-      </fieldset>
+    </fieldset>
 
-    </form>
-
-<%--
-  </div>
---%>
+  </form>
 
 </section>

@@ -43,11 +43,9 @@ public class LogoutServlet extends ParentServlet {
                     }
                 }
 
-                Integer sessionId = (Integer)httpSession.getAttribute("sessionId");
-                logger.debug("sessionId = "+sessionId);
                 if(sessionId != null) {
                     try {
-                        com.ispaces.web.manager.SessionManager.updateSessionDestroyed(sessionId);
+                        SessionManager.updateSessionDestroyed(sessionId);
                     } catch(Exception e) {
                         e.printStackTrace();
                     }

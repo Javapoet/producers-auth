@@ -125,11 +125,6 @@ public class ParentServlet extends HttpServlet {
                 properties.setProperty("contextUrl", contextUrl);
                 servletContext.setAttribute("contextUrl", contextUrl);
 
-                String instagramClientId = properties.getProperty("instagram.clientid");
-                logger.debug("instagramClientId = "+instagramClientId);
-                properties.setProperty("instagramClientId", instagramClientId);
-                servletContext.setAttribute("instagramClientId", instagramClientId);
-
                 String resetPasswordEmailFrom = properties.getProperty("reset-password.email.from");
                 logger.debug("resetPasswordEmailFrom = "+resetPasswordEmailFrom);
                 servletContext.setAttribute("resetPasswordEmailFrom", resetPasswordEmailFrom);
