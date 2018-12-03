@@ -57,7 +57,28 @@ public class SessionDatabaseManager {
             };
             */
 
-            String fields = "user_id, session_id, user_agent, remote_addr, host, protocol, locale, character_encoding, accept, accept_encoding, accept_language, accept_charset, referer, server_name, server_port, server_info, updated_by, created_by, date_created";
+            String fields = new StringBuilder()
+              .append("user_id")
+              .append(", session_id")
+              .append(", user_agent")
+              .append(", remote_addr")
+              .append(", host")
+              .append(", protocol")
+              .append(", locale")
+              .append(", character_encoding")
+              .append(", accept")
+              .append(", accept_encoding")
+              .append(", accept_language")
+              .append(", accept_charset")
+              .append(", referer")
+              .append(", server_name")
+              .append(", server_port")
+              .append(", server_info")
+              .append(", updated_by")
+              .append(", created_by")
+              .append(", date_created")
+              .toString();
+              
             String values = "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW()";
 
             String sql = new StringBuilder()
