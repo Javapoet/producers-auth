@@ -1,4 +1,4 @@
-package com.producersmarket.servlet;
+package com.producersmarket.auth.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -14,9 +14,9 @@ import javax.servlet.ServletException;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
-import com.producersmarket.database.LoginDatabaseManager;
-import com.producersmarket.database.SessionDatabaseManager;
-import com.producersmarket.model.Session;
+import com.producersmarket.auth.database.LoginDatabaseManager;
+import com.producersmarket.auth.database.SessionDatabaseManager;
+import com.producersmarket.auth.model.Session;
 
 public class LoginServlet extends ParentServlet {
 

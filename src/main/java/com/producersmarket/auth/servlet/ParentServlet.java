@@ -1,5 +1,4 @@
-
-package com.producersmarket.servlet;
+package com.producersmarket.auth.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;

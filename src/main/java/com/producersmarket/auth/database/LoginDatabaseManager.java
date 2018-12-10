@@ -1,5 +1,4 @@
-
-package com.producersmarket.database;
+package com.producersmarket.auth.database;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

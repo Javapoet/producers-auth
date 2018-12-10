@@ -1,9 +1,9 @@
-package com.producersmarket.model;
+package com.producersmarket.auth.model;
 
 import java.util.Date;
-import java.util.Enumeration;
 
-public class Session {
+public class Session
+{
 
     private int id = -1;
     private int userId = -1;

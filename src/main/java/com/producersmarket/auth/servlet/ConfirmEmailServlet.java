@@ -1,5 +1,4 @@
-
-package com.producersmarket.servlet;
+package com.producersmarket.auth.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,18 +11,10 @@ import javax.servlet.ServletException;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
-/*
-import com.ispaces.manager.ForgotPasswordManager;
-import com.ispaces.manager.UserManager;
-import com.ispaces.model.User;
-import com.ispaces.util.ResourceBundles;
-import com.ispaces.util.SecurityUtil;
-*/
-//import com.producersmarket.blog.database.UserDatabaseManager;
-import com.producersmarket.database.ResetPasswordDatabaseManager;
-//import com.producersmarket.model.User;
+import com.producersmarket.auth.database.RegisterDatabaseManager;
+import com.producersmarket.auth.database.ResetPasswordDatabaseManager;
 
-public class PasswordResetServlet extends ParentServlet {
+public class ConfirmEmailServlet extends ParentServlet {
 
     private static final Logger logger = LogManager.getLogger();
 
@@ -56,8 +47,13 @@ public class PasswordResetServlet extends ParentServlet {
                 logger.debug("userId = "+userId);
 
                 request.setAttribute("code", code);
+                request.setAttribute("userId", userId);
+
+                ResetPasswordDatabaseManager.deleteActivationCode(userId);  // Delete the reset code after it has been used.
                 
-                include(request, response, "/view/password-reset.jsp", "text/html; charset=UTF-8");
+                //include(request, response, "/view/home.jsp", "text/html; charset=UTF-8");
+                //include(request, response, "/view/login.jsp", "text/html; charset=UTF-8");
+                include(request, response, "/view/user-profile.jsp", "text/html; charset=UTF-8");
 
                 return;
 
@@ -95,6 +91,8 @@ public class PasswordResetServlet extends ParentServlet {
                 //String message = rb.getString(FORGOT_PASSWORD_USER_NOT_FOUND);
                 String header = "Password Reset";
                 String message = "Password reset token has expired or been used already.";
+                request.setAttribute("header", header);
+                request.setAttribute("message", message);
 
                 /*
                 PrintWriter out = response.getWriter();
@@ -103,8 +101,6 @@ public class PasswordResetServlet extends ParentServlet {
                 out.close();
                 */
 
-                request.setAttribute("header", header);
-                request.setAttribute("message", message);
 
                 //include(request, response, DIR_VIEW + "confirmationMessage.jsp");
                 include(request, response, "/view/confirmation-message.jsp");
@@ -126,6 +122,61 @@ public class PasswordResetServlet extends ParentServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.debug("doPost(request, response)");
 
+        String userIdString = request.getParameter("userId");
+        String name = request.getParameter("name");
+        int userId = -1;
+
+        logger.debug("userIdString = "+userIdString);
+        logger.debug("name = "+name);
+
+        if(userIdString != null) {
+            userId = Integer.parseInt(userIdString);
+        }
+        
+        logger.debug("userId = "+userId);
+
+        try {
+
+            /*
+            HttpSession httpSession = request.getSession(false);
+
+            if(httpSession != null) {
+
+                String sessionId = httpSession.getId();
+                logger.debug("sessionId = "+sessionId);
+
+                Integer userIdInteger = (Integer)httpSession.getAttribute("userId");
+                logger.debug("userIdInteger = "+userIdInteger);
+
+                if(userIdInteger != null) {
+
+                    int userId = userIdInteger.intValue();
+
+                    logger.debug("userId = "+userId);
+            */                    
+
+                    RegisterDatabaseManager.updateName(userId, name);
+
+                    include(request, response, "/view/home.jsp");
+
+                    return;
+            /*                    
+                }
+            }
+            */
+        } catch(java.sql.SQLException e) {
+            e.printStackTrace();
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        response.sendError(HttpServletResponse.SC_NOT_FOUND);
+    }
+
+/*
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        logger.debug("doPost(request, response)");
+
         String code = request.getParameter("code");
         String hash = request.getParameter("hash");
 
@@ -136,81 +187,41 @@ public class PasswordResetServlet extends ParentServlet {
         logger.debug("hash = '"+hash+"'");
         //logger.debug("doPost(request, response): password = '"+password+"', confirmPassword = '"+confirmPassword+"'");
 
-        /*
-        if(
-            password != null
-            && confirmPassword != null
-            && !password.equals(EMPTY)
-            && confirmPassword != null
-            && password.equals(confirmPassword)
-        ) {
-        */
+        try {
 
-            try {
+            //User user = UserDatabaseManager.selectUserByPasswordResetCode(code);
+            int userId = ResetPasswordDatabaseManager.selectUserIdByPasswordResetCode(code);
 
-                //User user = UserDatabaseManager.selectUserByPasswordResetCode(code);
-                int userId = ResetPasswordDatabaseManager.selectUserIdByPasswordResetCode(code);
+            //if(user != null) {
+            if(userId != -1) {
 
-                //if(user != null) {
-                if(userId != -1) {
+                //ResetPasswordDatabaseManager.updatePassword(user.getId(), hash);
+                ResetPasswordDatabaseManager.updatePassword(userId, hash);
 
-                    /*
-                    String passwordHash = SecurityUtil.hashPassword(password);
-                    logger.debug("passwordHash = "+passwordHash);
+                //String message = "Your password has been reset.<br/>You can log in below.";
+                String message = "Your password has been reset.<br/>Please log in below.";
 
-                    // Some passwords are less than 40 characters
-                    int passwordHashLength = passwordHash.length();
-                    logger.debug("passwordHashLength = "+passwordHashLength);
-                    if(passwordHashLength < 40) {
-                        if(passwordHashLength == 39) {
-                            passwordHash = "0"+passwordHash;
-                        } else if(passwordHashLength == 38) {
-                            passwordHash = "00"+passwordHash;
-                        }
-                        logger.debug("passwordHash = "+passwordHash);
-                    }
-                    */
+                request.setAttribute("message", message);
 
-                    //ResetPasswordDatabaseManager.updatePassword(user.getId(), hash);
-                    ResetPasswordDatabaseManager.updatePassword(userId, hash);
+                //response.sendRedirect(com.ispaces.web.servlet.InitServlet.init.getProperty("contextUrl"));
+                //response.sendRedirect(com.ispaces.web.servlet.InitServlet.init.getProperty("contextUrl")+"/admin/login");
+                //include(request, response, DIR_VIEW+"admin/login.jsp", "text/html; charset=UTF-8");
+                include(request, response, "/view/login.jsp");
 
-                    //String message = "Your password has been reset.<br/>You can log in below.";
-                    String message = "Your password has been reset.<br/>Please log in below.";
-
-                    request.setAttribute("message", message);
-
-                    //response.sendRedirect(com.ispaces.web.servlet.InitServlet.init.getProperty("contextUrl"));
-                    //response.sendRedirect(com.ispaces.web.servlet.InitServlet.init.getProperty("contextUrl")+"/admin/login");
-                    //include(request, response, DIR_VIEW+"admin/login.jsp", "text/html; charset=UTF-8");
-                    include(request, response, "/view/login.jsp");
-
-                    //ResetPasswordDatabaseManager.deleteActivationCode(user.getId(), code);  // Delete the reset code after it has been used.
-                    //ResetPasswordDatabaseManager.deleteActivationCode(user.getId());  // Delete the reset code after it has been used.
-                    ResetPasswordDatabaseManager.deleteActivationCode(userId);  // Delete the reset code after it has been used.
-                }
-
-            } catch(java.sql.SQLException e) {
-                e.printStackTrace();
-            } catch(Exception e) {
-                e.printStackTrace();
+                //ResetPasswordDatabaseManager.deleteActivationCode(user.getId(), code);  // Delete the reset code after it has been used.
+                //ResetPasswordDatabaseManager.deleteActivationCode(user.getId());  // Delete the reset code after it has been used.
+                ResetPasswordDatabaseManager.deleteActivationCode(userId);  // Delete the reset code after it has been used.
             }
 
-        /*
-        } else {
-
-            //doGet(request, response);
-
-            String errorMessage = "Passwords do not match";
-            if(password.equals(EMPTY)) errorMessage = "Enter your new password";
-
-            request.setAttribute("errorMessage", errorMessage);
-            request.setAttribute("code", code);
-            include(request, response, DIR_VIEW+"resetpassword.jsp", "text/html; charset=UTF-8");
-
+        } catch(java.sql.SQLException e) {
+            e.printStackTrace();
+        } catch(Exception e) {
+            e.printStackTrace();
         }
-        */
 
     }
+*/
+
 
 }
 

@@ -1,4 +1,4 @@
-package com.producersmarket.mailer;
+package com.producersmarket.auth.mailer;
 
 import java.util.Hashtable;
 import java.util.Map;
@@ -14,11 +14,10 @@ import com.ispaces.mail.model.PreparedEmail;
 import com.ispaces.mail.model.PreparedEmails;
 import com.ispaces.util.SecurityUtil;
 
-import com.producersmarket.database.ResetPasswordDatabaseManager;
-//import com.ispaces.model.User;    
-//import com.ispaces.servlet.InitServlet;
+import com.producersmarket.auth.database.ResetPasswordDatabaseManager;
 
-public class ResetPasswordMailer implements Runnable {
+public class ResetPasswordMailer
+  implements Runnable {
 
     private static final Logger logger = LogManager.getLogger();
 

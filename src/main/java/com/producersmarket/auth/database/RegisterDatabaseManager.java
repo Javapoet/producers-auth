@@ -1,5 +1,4 @@
-
-package com.producersmarket.database;
+package com.producersmarket.auth.database;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -12,9 +11,9 @@ import org.apache.logging.log4j.LogManager;
 
 import com.ispaces.database.connection.ConnectionManager;
 
-public class ResetPasswordDatabaseManager {
+public class RegisterDatabaseManager {
 
-    private static final String className = ResetPasswordDatabaseManager.class.getSimpleName();
+    private static final String className = RegisterDatabaseManager.class.getSimpleName();
     private static final Logger logger = LogManager.getLogger();
 
     private static final String insertActivationCode = "insertActivationCode";
@@ -50,10 +49,12 @@ public class ResetPasswordDatabaseManager {
 
         try {
 
-            PreparedStatement stmt = connMgr.loadStatement(selectUserIdByPasswordResetCode);
-            stmt.setString(1, code);
+            //PreparedStatement preparedStatement = connMgr.loadStatement(selectUserIdByPasswordResetCode);
+            String sql = "SELECT id FROM user WHERE activation_code = ?";
+            PreparedStatement preparedStatement = connMgr.prepareStatement(sql);
+            preparedStatement.setString(1, code);
 
-            ResultSet resultSet = stmt.executeQuery();
+            ResultSet resultSet = preparedStatement.executeQuery();
 
             if(resultSet.next()) {
 
@@ -102,6 +103,30 @@ public class ResetPasswordDatabaseManager {
             String sql = "UPDATE user SET activation_code = ? WHERE id = ?";
             PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
             preparedStatement.setString(1, null);
+            preparedStatement.setInt(2, userId);
+            preparedStatement.executeUpdate();
+
+        } catch(Exception e) {
+            StringWriter stringWriter = new StringWriter();
+            PrintWriter printWriter = new PrintWriter(stringWriter);
+            e.printStackTrace(printWriter);
+            logger.error(stringWriter.toString());
+        } finally {
+            connectionManager.commit();
+        }
+
+    }
+
+    public static void updateName(int userId, String name) throws SQLException, Exception {
+        logger.debug("deleteActivationCode("+userId+", "+name+")");
+
+        ConnectionManager connectionManager = new ConnectionManager(className, "updateName");
+
+        try {
+
+            String sql = "UPDATE user SET name = ? WHERE id = ?";
+            PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
+            preparedStatement.setString(1, name);
             preparedStatement.setInt(2, userId);
             preparedStatement.executeUpdate();
 
