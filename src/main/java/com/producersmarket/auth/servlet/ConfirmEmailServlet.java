@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 
 import org.apache.logging.log4j.Logger;
@@ -26,6 +27,20 @@ public class ConfirmEmailServlet extends ParentServlet {
     private static final String FORGOT_PASSWORD_USER_NOT_FOUND = "forgot.password.user.not.found";
     */
 
+    private String confirmEmailPage = null;
+  
+    public void init(ServletConfig config)
+      throws ServletException
+    {
+        logger.debug("init(" + config + ")");
+    
+        this.confirmEmailPage = config.getInitParameter("confirmEmailPage");
+    
+        logger.debug("confirmEmailPage = " + this.confirmEmailPage);
+    
+        super.init(config);
+    }
+
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.debug("doGet(request, response)");
 
@@ -36,6 +51,7 @@ public class ConfirmEmailServlet extends ParentServlet {
             if(pathInfo != null) code = pathInfo.substring(1, pathInfo.length());
 
             //logger.debug("doGet(request, response): code = '"+code+QUOTE);
+            logger.debug("code = "+code);
 
             //User user = UserDatabaseManager.selectUserByPasswordResetCode(code);
             int userId = ResetPasswordDatabaseManager.selectUserIdByPasswordResetCode(code);
@@ -54,6 +70,8 @@ public class ConfirmEmailServlet extends ParentServlet {
                 //include(request, response, "/view/home.jsp", "text/html; charset=UTF-8");
                 //include(request, response, "/view/login.jsp", "text/html; charset=UTF-8");
                 include(request, response, "/view/user-profile.jsp", "text/html; charset=UTF-8");
+                //includeUtf8(request, response, this.confirmEmailPage);
+                includeUtf8(request, response, this.confirmEmailPage != null ? this.confirmEmailPage : "/view/confirm-email.jsp");
 
                 return;
 
@@ -157,7 +175,8 @@ public class ConfirmEmailServlet extends ParentServlet {
 
                     RegisterDatabaseManager.updateName(userId, name);
 
-                    include(request, response, "/view/home.jsp");
+                    //include(request, response, "/view/home.jsp");
+                    includeUtf8(request, response, this.confirmEmailPage != null ? this.confirmEmailPage : "/view/confirm-email.jsp");
 
                     return;
             /*                    
