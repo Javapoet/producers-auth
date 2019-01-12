@@ -1,25 +1,17 @@
+package com.producersmarket.auth.listener;
 
-package com.producersmarket.listener;
-
-//import java.io.PrintWriter;
-//import java.io.StringWriter;
-//import java.util.ArrayList;
-//import java.util.Date;
-import java.util.HashMap;
-//import java.util.Iterator;
-//import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-//import javax.servlet.http.HttpServletRequest;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
-
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-public class SessionListener implements HttpSessionListener {
+public class SessionListener
+  implements HttpSessionListener
+{
 
     private static final Logger logger = LogManager.getLogger();
 

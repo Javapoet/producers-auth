@@ -1,6 +1,11 @@
 <%@ include file="/view/session.jsp" %>
+<<<<<<< HEAD
 <%@ include file="/view/imports.jsp" %>
 <%@ include file="/view/logger.jsp" %>
+=======
+<%@ include file="/view/logger.jsp" %>
+<%@ include file="/view/imports.jsp" %>
+>>>>>>> 1e62436eb6807412587f8072d8b77fc9ceb089f3
 <%
 
     //String contextUrl = InitServlet.properties.getProperty("contextUrl");
@@ -11,11 +16,14 @@
     String metaDescription = "";
     String metaKeywords = "producers market blog";
 
+<<<<<<< HEAD
+=======
+    Product headerProduct = (Product)request.getAttribute("headerProduct");
+
+>>>>>>> 1e62436eb6807412587f8072d8b77fc9ceb089f3
 %>
 <!doctype html>
 <html lang="en">
-
-  <%--@ include file="/view/blog/blog-head.jsp" --%>
 
   <head>
     <meta charset="utf-8" />

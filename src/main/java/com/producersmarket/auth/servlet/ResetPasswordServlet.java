@@ -1,4 +1,4 @@
-package com.producersmarket.servlet;
+package com.producersmarket.auth.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,10 +15,10 @@ import javax.servlet.ServletException;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
-import com.producersmarket.database.LoginDatabaseManager;
+import com.producersmarket.auth.database.LoginDatabaseManager;
 //import com.producersmarket.blog.database.UserDatabaseManager;
 //import com.producersmarket.model.User;
-import com.producersmarket.mailer.ResetPasswordMailer;
+import com.producersmarket.auth.mailer.ResetPasswordMailer;
 
 public class ResetPasswordServlet extends ParentServlet {
 

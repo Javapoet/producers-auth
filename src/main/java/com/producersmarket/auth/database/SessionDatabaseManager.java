@@ -1,5 +1,4 @@
-
-package com.producersmarket.database;
+package com.producersmarket.auth.database;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -19,7 +18,7 @@ import org.apache.logging.log4j.LogManager;
 
 import com.ispaces.database.connection.ConnectionManager;
 
-import com.producersmarket.model.Session;
+import com.producersmarket.auth.model.Session;
 
 public class SessionDatabaseManager {
 

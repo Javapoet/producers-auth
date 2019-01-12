@@ -1,8 +1,6 @@
 <%@ include file="/view/session.jsp" %>
 <%@ include file="/view/logger.jsp" %>
 <%@ include file="/view/imports.jsp" %>
-
-<!doctype html>
 <%
 
     //String contextUrl = InitServlet.properties.getProperty("contextUrl");
@@ -16,12 +14,11 @@
     Product headerProduct = (Product)request.getAttribute("headerProduct");
 
 %>
-
+<!doctype html>
 <html lang="en">
 
-  <%--@ include file="/view/blog/blog-head.jsp" --%>
-
   <head>
+
     <meta charset="utf-8" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />

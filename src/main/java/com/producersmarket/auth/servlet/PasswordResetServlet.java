@@ -1,5 +1,4 @@
-
-package com.producersmarket.servlet;
+package com.producersmarket.auth.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -20,7 +19,7 @@ import com.ispaces.util.ResourceBundles;
 import com.ispaces.util.SecurityUtil;
 */
 //import com.producersmarket.blog.database.UserDatabaseManager;
-import com.producersmarket.database.ResetPasswordDatabaseManager;
+import com.producersmarket.auth.database.ResetPasswordDatabaseManager;
 //import com.producersmarket.model.User;
 
 public class PasswordResetServlet extends ParentServlet {
