@@ -30,8 +30,14 @@ public class ResetPasswordServlet extends ParentServlet {
     private static final String LEFT_SQUARE_BRACKET = "[";
     private static final String RIGHT_SQUARE_BRACKET = "]";
 
+    private String loginPage = null;
+
     public void init(ServletConfig config) throws ServletException {
         logger.debug("init("+config+")");
+
+        this.loginPage = config.getInitParameter("loginPage");
+
+        logger.debug("loginPage = "+loginPage);
 
         super.init(config);
     }
@@ -59,9 +65,13 @@ public class ResetPasswordServlet extends ParentServlet {
         logger.debug("email = "+email);
 
         if(email == null || email.equals(EMPTY)) {
-            request.setAttribute("errorMessage", "Please Enter an email address");
-            includeUtf8(request, response, "/view/login.jsp");
+
+            request.setAttribute("emailError", "please Enter an Email Address");
+            includeUtf8(request, response, "/view/reset-password.jsp");
+            //includeUtf8(request, response, this.loginPage);
+
             return;
+
         } else {
             email = email.toLowerCase();
         }
