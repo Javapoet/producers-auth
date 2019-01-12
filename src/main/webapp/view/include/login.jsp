@@ -64,8 +64,12 @@
           <input type="submit" value="Login" onclick="valid=filterLogin();return valid;" />
         </p>
 
-        <p style="padding: 10px 0px;">
+        <p style="padding: 10px 0px 0px 0px;">
           <a href="<%= contextUrl %>/reset-password">Reset Password</a>
+        </p>
+
+        <p style="padding: 0px;">
+          <a href="<%= contextUrl %>/register">Sign Up</a>
         </p>
 
 <%--

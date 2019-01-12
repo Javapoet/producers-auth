@@ -1,5 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!doctype html>
+<%@ include file="/view/session.jsp" %>
+<%@ include file="/view/imports.jsp" %>
+<%@ include file="/view/logger.jsp" %>
 <%
 
     //String contextUrl = InitServlet.properties.getProperty("contextUrl");
@@ -10,11 +11,8 @@
     String metaDescription = "";
     String metaKeywords = "producers market blog";
 
-    Product headerProduct = (Product)request.getAttribute("headerProduct");
 %>
-<%@ include file="/view/logger.jsp" %>
-<%@ include file="/view/imports.jsp" %>
-
+<!doctype html>
 <html lang="en">
 
   <%--@ include file="/view/blog/blog-head.jsp" --%>
@@ -42,9 +40,7 @@
 
   <body>
 
-    <%@ include file="/view/blog/blog-header.jsp" %>
-
-    <%@ include file="/view/blog/product-categories.jsp" %>    
+    <%@ include file="/view/login/login-header.jsp" %>
 
     <%@ include file="/view/include/confirmation-message.jsp" %>
 

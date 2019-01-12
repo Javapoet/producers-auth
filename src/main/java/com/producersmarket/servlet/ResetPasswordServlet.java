@@ -59,7 +59,7 @@ public class ResetPasswordServlet extends ParentServlet {
         logger.debug("email = "+email);
 
         if(email == null || email.equals(EMPTY)) {
-            request.setAttribute("errorMessage", "Please Enter an Email Address");
+            request.setAttribute("errorMessage", "Please Enter an email address");
             includeUtf8(request, response, "/view/login.jsp");
             return;
         } else {
@@ -114,9 +114,13 @@ public class ResetPasswordServlet extends ParentServlet {
                     //logger.debug("properties = "+properties);
 
                     //ResetPasswordMailer.send(user, true);
-                    ResetPasswordMailer.send(properties, true);
+                    //ResetPasswordMailer.send(properties, true);
+                    //ResetPasswordMailer.send(properties);
+                    ResetPasswordMailer.send(properties, false);
 
-                    include(request, response, "/view/email-sent.jsp");
+                    request.setAttribute("properties", properties);
+
+                    include(request, response, "/view/reset-password-email-sent.jsp");
 
                     return;
 

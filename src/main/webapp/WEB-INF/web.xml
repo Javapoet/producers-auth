@@ -58,7 +58,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>LoginServlet</servlet-name>
-    <url-pattern>login</url-pattern>
+    <url-pattern>/login</url-pattern>
     <url-pattern></url-pattern>
   </servlet-mapping>
 
@@ -69,7 +69,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>LogoutServlet</servlet-name>
-    <url-pattern>logout</url-pattern>
+    <url-pattern>/logout</url-pattern>
   </servlet-mapping>
 
   <servlet>
@@ -84,13 +84,27 @@
   </servlet-mapping>
 
   <servlet>
+    <servlet-name>RegisterServlet</servlet-name>
+    <servlet-class>com.producersmarket.servlet.RegisterServlet</servlet-class>
+    <!--async-supported>true</async-supported-->
+    <init-param>
+      <param-name>registerPage</param-name>
+      <param-value>/view/register.jsp</param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>RegisterServlet</servlet-name>
+    <url-pattern>/register</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
     <servlet-name>ResetPasswordServlet</servlet-name>
     <servlet-class>com.producersmarket.servlet.ResetPasswordServlet</servlet-class>
     <!--async-supported>true</async-supported-->
   </servlet>
   <servlet-mapping>
     <servlet-name>ResetPasswordServlet</servlet-name>
-    <url-pattern>reset-password</url-pattern>
+    <url-pattern>/reset-password</url-pattern>
   </servlet-mapping>
 
 <!--

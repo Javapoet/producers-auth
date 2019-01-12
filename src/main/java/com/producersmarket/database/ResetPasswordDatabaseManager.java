@@ -50,10 +50,12 @@ public class ResetPasswordDatabaseManager {
 
         try {
 
-            PreparedStatement stmt = connMgr.loadStatement(selectUserIdByPasswordResetCode);
-            stmt.setString(1, code);
+            //PreparedStatement preparedStatement = connMgr.loadStatement(selectUserIdByPasswordResetCode);
+            String sql = "SELECT id FROM user WHERE activation_code = ?";
+            PreparedStatement preparedStatement = connMgr.prepareStatement(sql);
+            preparedStatement.setString(1, code);
 
-            ResultSet resultSet = stmt.executeQuery();
+            ResultSet resultSet = preparedStatement.executeQuery();
 
             if(resultSet.next()) {
 

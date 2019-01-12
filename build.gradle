@@ -23,7 +23,7 @@ apply plugin: 'war'
 targetCompatibility = "1.8"
 sourceCompatibility = "1.8"
 group = 'com.producersmarket'
-def jettyVersion = "9.4.12.RC2"
+def jettyVersion = "9.4.7.v20170914"
 
 List compileList =  [
 

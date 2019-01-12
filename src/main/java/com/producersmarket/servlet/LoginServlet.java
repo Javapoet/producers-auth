@@ -67,9 +67,15 @@ public class LoginServlet extends ParentServlet {
         logger.debug("password = "+password);
 
         if(email == null || email.equals(EMPTY)) {
-            request.setAttribute("errorMessage", "Please Enter an Email Address");
+
+            request.setAttribute("usernameError", "Please Enter an Email Address");
             includeUtf8(request, response, this.loginPage);
             return;
+
+        } else if(password == null || password.equals(EMPTY)) {
+
+            request.setAttribute("passwordError", "Please Enter a Password");
+
         } else {
             // make sure the email is lowercase
             email = email.toLowerCase();
@@ -180,7 +186,8 @@ public class LoginServlet extends ParentServlet {
 
             } else { // if(passwordHash != null
 
-                request.setAttribute("errorMessage", "Incorrect password");
+                //request.setAttribute("errorMessage", "Incorrect password");
+                request.setAttribute("passwordError", "Incorrect password, try again");
                 includeUtf8(request, response, this.loginPage);
                 return;
 

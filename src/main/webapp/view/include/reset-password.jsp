@@ -42,7 +42,7 @@
       </p>
 
       <p style="padding: 10px 0px;">
-        <a href="<%= contextUrl %>/login">Login</a>
+        <a href="<%= contextUrl %>/login">Log in</a>
       </p>
 
     </fieldset>

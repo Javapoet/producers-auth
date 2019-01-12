@@ -95,6 +95,8 @@ public class PasswordResetServlet extends ParentServlet {
                 //String message = rb.getString(FORGOT_PASSWORD_USER_NOT_FOUND);
                 String header = "Password Reset";
                 String message = "Password reset token has expired or been used already.";
+                request.setAttribute("header", header);
+                request.setAttribute("message", message);
 
                 /*
                 PrintWriter out = response.getWriter();
@@ -103,8 +105,6 @@ public class PasswordResetServlet extends ParentServlet {
                 out.close();
                 */
 
-                request.setAttribute("header", header);
-                request.setAttribute("message", message);
 
                 //include(request, response, DIR_VIEW + "confirmationMessage.jsp");
                 include(request, response, "/view/confirmation-message.jsp");
