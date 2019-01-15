@@ -81,9 +81,12 @@ public class ResetPasswordMailer
         String name = properties.getProperty("name");
         String subject = properties.getProperty("subject");
 
-        logger.debug("this.smtpServer = '"+this.smtpServer+"', this.smtpPort = '"+this.smtpPort+"'");
-
-        logger.debug("to = '"+this.toAddress+"', fromAddress = '"+fromAddress+"'");
+        logger.debug("this.smtpServer = "+this.smtpServer);
+        logger.debug("this.smtpPort = "+this.smtpPort);
+        logger.debug("this.smtpUser = "+this.smtpUser);
+        logger.debug("this.smtpPass = "+this.smtpPass);
+        logger.debug("this.toAddress = "+this.toAddress);
+        logger.debug("this.fromAddress = "+this.fromAddress);
     }
 
     /*
@@ -143,15 +146,14 @@ public class ResetPasswordMailer
 
             String messageName = "reset-password";
             PreparedEmail preparedEmail = null;
+
             try {
 
                 preparedEmail = PreparedEmails.getPreparedEmail(messageName);
 
             } catch(Exception e) {
-
                 logger.error("Unable top create the PreparedEmail. "+messageName);
                 e.printStackTrace();
-
             }
 
             this.subject = preparedEmail.getSubject();
@@ -178,6 +180,8 @@ public class ResetPasswordMailer
             mailClient = new MailClient();
             mailClient.setSmtpServer(this.smtpServer);
             mailClient.setSmtpPort(this.smtpPort);
+            mailClient.setSmtpUser(this.smtpUser);
+            mailClient.setSmtpPass(this.smtpPass);
 
             //try{
                 mailClient.sendMessage(mailMessage);
