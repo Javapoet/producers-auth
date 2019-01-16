@@ -32,12 +32,15 @@ public class ParentServlet extends HttpServlet {
     public static final String LEFT_SQUARE = "[";
     public static final String RIGHT_SQUARE = "]";
     public static final String DOUBLE_QUOTE = "\"";
-	public static final String EMPTY = "";
+    public static final String EMPTY = "";
     public static final String COLON = ":";
 
-    public static ServletContext servletContext;
+    //public static ServletContext servletContext;
+    //public ServletContext servletContext;
+    private ServletContext servletContext;
     public Properties properties = null;
-    public static java.util.concurrent.Executor executor = null;
+    //public static java.util.concurrent.Executor executor = null;
+    public java.util.concurrent.Executor executor = null;
 	
     public String doubleQuotes(String string) {
         return new StringBuilder().append(DOUBLE_QUOTE).append(string).append(DOUBLE_QUOTE).toString();
@@ -54,10 +57,10 @@ public class ParentServlet extends HttpServlet {
 
         logger.info("getClass().getName() = "+getClass().getName());
 
-        servletContext = config.getServletContext();
-        logger.debug("servletContext = "+servletContext);
+        this.servletContext = config.getServletContext();
+        logger.debug("this.servletContext = " + this.servletContext);
 
-        String contextInitialized = (String)servletContext.getAttribute("contextInitialized");
+        String contextInitialized = (String)this.servletContext.getAttribute("contextInitialized");
         logger.debug("contextInitialized = "+contextInitialized);
 
         if(contextInitialized == null) {
@@ -65,7 +68,7 @@ public class ParentServlet extends HttpServlet {
             try {
 
                 java.io.InputStream inputStream = servletContext.getResourceAsStream("/WEB-INF/init.properties");
-                //logger.debug("inputStream = "+inputStream);
+                logger.debug("inputStream = "+inputStream);
 
                 //this.properties = (Properties)com.ispaces.util.PropertiesUtil.getProperties(inputStream);
                 this.properties = new Properties();
@@ -158,16 +161,17 @@ public class ParentServlet extends HttpServlet {
                 connectionPoolProperties.setProperty("maxConns", "10");
                 connectionPoolProperties.setProperty("maxAgeDays", "0.1");
                 connectionPoolProperties.setProperty("maxIdleSeconds", "60");
-                logger.debug("connectionPoolProperties = "+connectionPoolProperties);
 
                 ConnectionPool connectionPool = new ConnectionPool(connectionPoolProperties);
+
+                logger.debug("connectionPoolProperties = "+connectionPoolProperties);
                 logger.debug("connectionPool = "+connectionPool);
 
                 com.ispaces.database.connection.ConnectionManager.loadStatements(connectionPool);
                 com.ispaces.database.manager.JavaClassManager.init(connectionPool);
                 com.ispaces.database.manager.ConnectionPoolManager.initConnectionPoolMap(connectionPool);
 
-                executor = new java.util.concurrent.ThreadPoolExecutor(
+                this.executor = new java.util.concurrent.ThreadPoolExecutor(
                     10
                   , 10
                   , 50000L
@@ -182,7 +186,7 @@ public class ParentServlet extends HttpServlet {
                 logger.error(stringWriter.toString());
             }
 
-            servletContext.setAttribute("contextInitialized", "true");
+            this.servletContext.setAttribute("contextInitialized", "true");
 
         } // if(contextInitialized != null) {
 
@@ -214,7 +218,7 @@ public class ParentServlet extends HttpServlet {
             //logger.debug("this.getServletConfig() = "+this.getServletConfig());
             //if(this.getServletConfig() != null) logger.debug("this.getServletConfig().getServletContext() = "+this.getServletConfig().getServletContext());
             //this.getServletConfig().getServletContext().getRequestDispatcher(jspPath).include(request, response);
-            servletContext.getRequestDispatcher(jspPath).include(request, response);
+            this.servletContext.getRequestDispatcher(jspPath).include(request, response);
             //request.getRequestDispatcher(jspPath).include(request, response);
 
         } catch(java.io.FileNotFoundException e) {
@@ -280,7 +284,7 @@ public class ParentServlet extends HttpServlet {
             //this.getServletConfig().getServletContext().getRequestDispatcher(path).include(request, response);
             //context.getRequestDispatcher(path).include(request, response);
 
-            servletContext.getRequestDispatcher(path).include(request, response);
+            this.servletContext.getRequestDispatcher(path).include(request, response);
 
             try {
                 //response.getOutputStream().flush(); // yes/no/why?

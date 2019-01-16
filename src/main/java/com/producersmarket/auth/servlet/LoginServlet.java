@@ -27,19 +27,39 @@ public class LoginServlet extends ParentServlet {
     private static final String LEFT_SQUARE_BRACKET = "[";
     private static final String RIGHT_SQUARE_BRACKET = "]";
 
+    private String loginPage = "/view/login.jsp";
+    private String loggedInPage = "/view/home.jsp";
+
+    /*
+    protected String loginPage = null;
+    protected String loggedInPage = null;
+
     private String loginPage = null;
     private String loggedInPage = null;
+    */
 
     public void init(ServletConfig config) throws ServletException {
         logger.debug("init("+config+")");
 
+        /*
         this.loginPage = config.getInitParameter("loginPage");
         this.loggedInPage = config.getInitParameter("loggedInPage");
 
         logger.debug("loginPage = "+loginPage);
         logger.debug("loggedInPage = "+loggedInPage);
+        */
 
         super.init(config);
+    }
+
+    protected void setLoginPage(String loginPage) {
+        logger.debug("setLoginPage("+loginPage+")");
+        this.loginPage = loginPage;
+    }
+
+    protected void setLoggedInPage(String loggedInPage) {
+        logger.debug("setLoggedInPage("+loggedInPage+")");
+        this.loggedInPage = loggedInPage;
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -47,7 +67,8 @@ public class LoginServlet extends ParentServlet {
 
         try {
 
-            includeUtf8(request, response, this.loginPage);
+            //includeUtf8(request, response, this.loginPage);
+            includeUtf8(request, response, loginPage);
 
         } catch(java.io.FileNotFoundException e) {
             StringWriter stringWriter = new StringWriter();
