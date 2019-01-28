@@ -4,12 +4,21 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.nio.charset.Charset;
+
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+
+import org.json.JSONObject;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -37,6 +46,67 @@ public class LoginServlet extends ParentServlet {
     private String loginPage = null;
     private String loggedInPage = null;
     */
+
+    /*
+     * Secret key
+     * Use this for communication between your site and Google. Be sure to keep it a secret.
+     */
+    private String secretKey = "6Ld5B40UAAAAAJ6MEjJiYZQiTlCuBvJSduqcnfzO";
+
+    /*
+     * Site key
+     */
+    private String siteKey = "6Ld5B40UAAAAAL65r3R16dgVU467wUHZmEPFDN_I";
+
+    /**
+     * Validates Google reCAPTCHA V2 or Invisible reCAPTCHA.
+     * https://developers.google.com/recaptcha/docs/verify
+     *
+     * @param secretKey Secret key (key given for communication between your site and Google)
+     * @param response reCAPTCHA response from client side. (g-recaptcha-response)
+     * @return true if validation successful, false otherwise.
+     */
+    //public boolean isCaptchaValid(String secretKey, String response, String remoteAddr) {
+    public boolean isCaptchaValid(String secretKey, String response) {
+        //logger.debug("isCaptchaValid("+secretKey+", "+response+", "+remoteAddr+")");
+        logger.debug("isCaptchaValid("+secretKey+", "+response+")");
+
+        try {
+
+            String requestUrl = "https://www.google.com/recaptcha/api/siteverify";
+
+            String url = new StringBuilder()
+                .append("https://www.google.com/recaptcha/api/siteverify")
+                .append("?secret=").append(secretKey)
+                //.append("&remoteip=").append(remoteAddr)
+                .append("&response=").append(response)
+                .toString();
+
+            logger.debug(url);
+
+            InputStream inputStream = new URL(url).openStream();
+            BufferedReader bufferedReader= new BufferedReader(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
+            StringBuilder stringBuilder = new StringBuilder();
+            int codePoint;
+
+            while((codePoint = bufferedReader.read()) != -1) {
+                stringBuilder.append((char) codePoint);
+            }
+
+            String jsonString = stringBuilder.toString();
+            logger.debug(jsonString);
+
+            inputStream.close();
+
+            JSONObject jsonObject = new JSONObject(jsonString);
+            logger.debug(jsonObject);
+            
+            return jsonObject.getBoolean("success");
+
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
     public void init(ServletConfig config) throws ServletException {
         logger.debug("init("+config+")");
@@ -81,21 +151,47 @@ public class LoginServlet extends ParentServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.debug("doPost(request, response)");
 
+        //String remoteAddr = request.getRemoteAddr();
         String email = request.getParameter("username");
         String password = request.getParameter("hash");
+        String recaptchaResponse = request.getParameter("g-recaptcha-response");
+        //String secretKey = "6Ld5B40UAAAAAJ6MEjJiYZQiTlCuBvJSduqcnfzO";
             
+        //logger.debug("remoteAddr = "+remoteAddr);
         logger.debug("email = "+email);
         logger.debug("password = "+password);
+        logger.debug("recaptchaResponse = "+recaptchaResponse);
+        //logger.debug("secretKey = "+secretKey);
+
+        if(recaptchaResponse != null) {
+
+            //boolean captchaValid = isCaptchaValid(secretKey, recaptchaResponse, remoteAddr);
+            boolean captchaValid = isCaptchaValid(secretKey, recaptchaResponse);
+            logger.debug("captchaValid = "+captchaValid);
+
+            if(!captchaValid) {
+                //request.setAttribute("usernameError", "Please Enter an Email Address");
+                //request.setAttribute("passwordError", "Please Enter an Email Address");
+                request.setAttribute("errorMessage", "Recaptcha Failure");
+                includeUtf8(request, response, this.loginPage);
+
+                return;
+            }
+        }
 
         if(email == null || email.equals(EMPTY)) {
 
             request.setAttribute("usernameError", "Please Enter an Email Address");
             includeUtf8(request, response, this.loginPage);
+
             return;
 
         } else if(password == null || password.equals(EMPTY)) {
 
             request.setAttribute("passwordError", "Please Enter a Password");
+            includeUtf8(request, response, this.loginPage);
+            
+            return;
 
         } else {
             // make sure the email is lowercase
@@ -210,6 +306,7 @@ public class LoginServlet extends ParentServlet {
                 //request.setAttribute("errorMessage", "Incorrect password");
                 request.setAttribute("passwordError", "Incorrect password, try again");
                 includeUtf8(request, response, this.loginPage);
+
                 return;
 
             } // if(passwordHash != null
