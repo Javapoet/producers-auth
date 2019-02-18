@@ -87,8 +87,9 @@ public class LoginDatabaseManager {
 
         try {
 
-            String sql = "SELECT password_hash FROM user WHERE email = ?";
-            PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
+            //String sql = "SELECT password_hash FROM user WHERE email = ?";
+            //PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
+            PreparedStatement preparedStatement = connectionManager.loadStatement("selectPasswordHashByEmail");
             preparedStatement.setString(1, email);
             ResultSet resultSet = preparedStatement.executeQuery();
 
