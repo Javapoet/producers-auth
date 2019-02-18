@@ -50,8 +50,9 @@ public class RegisterDatabaseManager {
         try {
 
             //PreparedStatement preparedStatement = connMgr.loadStatement(selectUserIdByPasswordResetCode);
-            String sql = "SELECT id FROM user WHERE activation_code = ?";
-            PreparedStatement preparedStatement = connMgr.prepareStatement(sql);
+            //String sql = "SELECT id FROM user WHERE activation_code = ?";
+            //PreparedStatement preparedStatement = connMgr.prepareStatement(sql);
+            PreparedStatement preparedStatement = connMgr.loadStatement("selectUserIdByPasswordResetCode");
             preparedStatement.setString(1, code);
 
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -75,8 +76,9 @@ public class RegisterDatabaseManager {
 
         try {
 
-            String sql = "UPDATE user SET activation_code=? WHERE id=?";
-            PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
+            //String sql = "UPDATE user SET activation_code=? WHERE id=?";
+            //PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
+            PreparedStatement preparedStatement = connectionManager.loadStatement("updateActivationCode");
             preparedStatement.setString(1, code);
             preparedStatement.setInt(2, userId);
             preparedStatement.executeUpdate();
@@ -100,8 +102,9 @@ public class RegisterDatabaseManager {
 
         try {
 
-            String sql = "UPDATE user SET activation_code = ? WHERE id = ?";
-            PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
+            //String sql = "UPDATE user SET activation_code = ? WHERE id = ?";
+            //PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
+            PreparedStatement preparedStatement = connectionManager.loadStatement("updateActivationCode");
             preparedStatement.setString(1, null);
             preparedStatement.setInt(2, userId);
             preparedStatement.executeUpdate();
@@ -118,14 +121,15 @@ public class RegisterDatabaseManager {
     }
 
     public static void updateName(int userId, String name) throws SQLException, Exception {
-        logger.debug("deleteActivationCode("+userId+", "+name+")");
+        logger.debug("updateName("+userId+", "+name+")");
 
         ConnectionManager connectionManager = new ConnectionManager(className, "updateName");
 
         try {
 
-            String sql = "UPDATE user SET name = ? WHERE id = ?";
-            PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
+            //String sql = "UPDATE user SET name = ? WHERE id = ?";
+            //PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
+            PreparedStatement preparedStatement = connectionManager.loadStatement("updateName");
             preparedStatement.setString(1, name);
             preparedStatement.setInt(2, userId);
             preparedStatement.executeUpdate();
@@ -148,8 +152,9 @@ public class RegisterDatabaseManager {
 
         try {
 
-            String sql = "UPDATE user SET activation_code=? WHERE email=?";
-            PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
+            //String sql = "UPDATE user SET activation_code=? WHERE email=?";
+            //PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
+            PreparedStatement preparedStatement = connectionManager.loadStatement("updateActivationCode");
             preparedStatement.setString(1, code);
             preparedStatement.setString(2, email);
             preparedStatement.executeUpdate();
@@ -172,8 +177,9 @@ public class RegisterDatabaseManager {
 
         try {
 
-            String sql = "UPDATE user SET activation_code=? WHERE email=?";
-            PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
+            //String sql = "UPDATE user SET activation_code=? WHERE email=?";
+            //PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
+            PreparedStatement preparedStatement = connectionManager.loadStatement("updateActivationCode");
             preparedStatement.setString(1, null);
             preparedStatement.setString(2, email);
             preparedStatement.executeUpdate();

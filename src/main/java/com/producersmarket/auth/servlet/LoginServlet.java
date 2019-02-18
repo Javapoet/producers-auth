@@ -304,7 +304,8 @@ public class LoginServlet extends ParentServlet {
             } else { // if(passwordHash != null
 
                 //request.setAttribute("errorMessage", "Incorrect password");
-                request.setAttribute("passwordError", "Incorrect password, try again");
+                //request.setAttribute("passwordError", "Incorrect password, try again");
+                request.setAttribute("usernameError", "No account with that email address exists");
                 includeUtf8(request, response, this.loginPage);
 
                 return;

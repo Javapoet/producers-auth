@@ -50,7 +50,7 @@ public class ResetPasswordDatabaseManager {
         try {
 
             //PreparedStatement preparedStatement = connMgr.loadStatement(selectUserIdByPasswordResetCode);
-            String sql = "SELECT id FROM user WHERE activation_code = ?";
+            String sql = "SELECT id FROM user WHERE activationcode = ?";
             PreparedStatement preparedStatement = connMgr.prepareStatement(sql);
             preparedStatement.setString(1, code);
 
@@ -75,7 +75,7 @@ public class ResetPasswordDatabaseManager {
 
         try {
 
-            String sql = "UPDATE user SET activation_code=? WHERE id=?";
+            String sql = "UPDATE user SET activationcode = ? WHERE id=?";
             PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
             preparedStatement.setString(1, code);
             preparedStatement.setInt(2, userId);
@@ -124,8 +124,9 @@ public class ResetPasswordDatabaseManager {
 
         try {
 
-            String sql = "UPDATE user SET activation_code=? WHERE email=?";
-            PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
+            //String sql = "UPDATE user SET activation_code=? WHERE email=?";
+            //PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
+            PreparedStatement preparedStatement = connectionManager.loadStatement("insertActivationCode");
             preparedStatement.setString(1, code);
             preparedStatement.setString(2, email);
             preparedStatement.executeUpdate();
@@ -148,8 +149,9 @@ public class ResetPasswordDatabaseManager {
 
         try {
 
-            String sql = "UPDATE user SET activation_code=? WHERE email=?";
-            PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
+            //String sql = "UPDATE user SET activation_code=? WHERE email=?";
+            //PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
+            PreparedStatement preparedStatement = connectionManager.loadStatement("deleteActivationCode");
             preparedStatement.setString(1, null);
             preparedStatement.setString(2, email);
             preparedStatement.executeUpdate();

@@ -28,8 +28,9 @@ public class LoginDatabaseManager {
 
         try {
 
-            String sql = "UPDATE user SET session_id = ? WHERE id = ?";
-            PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
+            //String sql = "UPDATE user SET session_id = ? WHERE id = ?";
+            //PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
+            PreparedStatement preparedStatement = connectionManager.loadStatement("updateUserLoggedIn");
             preparedStatement.setString(1, sessionId);
             preparedStatement.setInt(2, userId);
             preparedStatement.executeUpdate();
@@ -58,6 +59,7 @@ public class LoginDatabaseManager {
 
         try {
 
+            /*
             String sql = new StringBuilder()
                 .append("SELECT id")
                 .append(" FROM user")
@@ -65,6 +67,8 @@ public class LoginDatabaseManager {
                 .toString();
                 
             PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
+            */
+            PreparedStatement preparedStatement = connectionManager.loadStatement("selectUserIdByEmail");
             preparedStatement.setString(1, email);
             ResultSet resultSet = preparedStatement.executeQuery();
 
