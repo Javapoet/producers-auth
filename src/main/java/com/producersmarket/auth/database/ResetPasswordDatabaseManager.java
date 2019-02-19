@@ -43,15 +43,16 @@ public class ResetPasswordDatabaseManager {
     }
 
     public static int selectUserIdByPasswordResetCode(String code) throws SQLException, Exception {
-        logger.debug("selectUserByPasswordResetCode("+code+")");
+        logger.debug("selectUserIdByPasswordResetCode("+code+")");
 
         ConnectionManager connMgr = new ConnectionManager(className, selectUserIdByPasswordResetCode);
 
         try {
 
             //PreparedStatement preparedStatement = connMgr.loadStatement(selectUserIdByPasswordResetCode);
-            String sql = "SELECT id FROM user WHERE activationcode = ?";
-            PreparedStatement preparedStatement = connMgr.prepareStatement(sql);
+            //String sql = "SELECT id FROM user WHERE activationcode = ?";
+            //PreparedStatement preparedStatement = connMgr.prepareStatement(sql);
+            PreparedStatement preparedStatement = connMgr.loadStatement("selectUserIdByPasswordResetCode");
             preparedStatement.setString(1, code);
 
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -75,8 +76,9 @@ public class ResetPasswordDatabaseManager {
 
         try {
 
-            String sql = "UPDATE user SET activationcode = ? WHERE id=?";
-            PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
+            //String sql = "UPDATE user SET activationcode = ? WHERE id=?";
+            //PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
+            PreparedStatement preparedStatement = connectionManager.loadStatement("insertActivationCode");
             preparedStatement.setString(1, code);
             preparedStatement.setInt(2, userId);
             preparedStatement.executeUpdate();
@@ -100,8 +102,9 @@ public class ResetPasswordDatabaseManager {
 
         try {
 
-            String sql = "UPDATE user SET activation_code = ? WHERE id = ?";
-            PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
+            //String sql = "UPDATE user SET activation_code = ? WHERE id = ?";
+            //PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
+            PreparedStatement preparedStatement = connectionManager.loadStatement("deleteActivationCode");
             preparedStatement.setString(1, null);
             preparedStatement.setInt(2, userId);
             preparedStatement.executeUpdate();

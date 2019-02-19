@@ -56,8 +56,9 @@ public class SessionDatabaseManager {
             };
             */
 
+            /*
             String fields = new StringBuilder()
-              .append("user_id")
+              .append("userid")
               .append(", sessionid")
               .append(", useragent")
               .append(", remoteaddr")
@@ -90,6 +91,8 @@ public class SessionDatabaseManager {
 
             PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
             //PreparedStatement preparedStatement = connectionManager.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            */
+            PreparedStatement preparedStatement = connectionManager.loadStatement("insertSession");
 
             preparedStatement.setInt(1, session.getUserId());
             preparedStatement.setString(2, session.getSessionId());

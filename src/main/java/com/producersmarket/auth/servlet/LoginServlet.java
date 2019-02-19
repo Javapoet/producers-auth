@@ -172,7 +172,11 @@ public class LoginServlet extends ParentServlet {
             if(!captchaValid) {
                 //request.setAttribute("usernameError", "Please Enter an Email Address");
                 //request.setAttribute("passwordError", "Please Enter an Email Address");
-                request.setAttribute("errorMessage", "Recaptcha Failure");
+                //request.setAttribute("errorMessage", "Recaptcha Failure");
+                //request.setAttribute("errorMessage", getServletContext().getAttribute("preparedMessage").getMessage("RecaptchaFailure");
+                //request.setAttribute("errorMessage", getServletContext().getAttribute("preparedMessages").getMessage("recaptcha.not.checked");
+                request.setAttribute("errorMessage", "Check the box to verify you are not a robot");
+
                 includeUtf8(request, response, this.loginPage);
 
                 return;

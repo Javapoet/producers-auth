@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 
 import org.apache.logging.log4j.Logger;
@@ -34,6 +35,23 @@ public class PasswordResetServlet extends ParentServlet {
     private static final String FORGOT_PASSWORD_USER_NOT_FOUND = "forgot.password.user.not.found";
     */
 
+    private String passwordResetPage = "/view/password-reset.jsp";
+    private String loginPage = "/view/login.jsp";
+
+    public void init(ServletConfig config) throws ServletException {
+        logger.debug("init("+config+")");
+
+        String passwordResetPage = config.getInitParameter("passwordResetPage");
+        if(passwordResetPage != null) this.passwordResetPage = passwordResetPage;
+        logger.debug("this.passwordResetPage = " + this.passwordResetPage);
+
+        String loginPage = config.getInitParameter("loginPage");
+        if(loginPage != null) this.loginPage = loginPage;
+        logger.debug("this.loginPage = " + this.loginPage);
+
+        super.init(config);
+    }
+
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.debug("doGet(request, response)");
 
@@ -47,16 +65,16 @@ public class PasswordResetServlet extends ParentServlet {
 
             //User user = UserDatabaseManager.selectUserByPasswordResetCode(code);
             int userId = ResetPasswordDatabaseManager.selectUserIdByPasswordResetCode(code);
+            logger.debug("userId = "+userId);
 
             //if(user != null) {
             if(userId != -1) {
 
-                //logger.debug("user = "+user);
-                logger.debug("userId = "+userId);
-
                 request.setAttribute("code", code);
                 
-                include(request, response, "/view/password-reset.jsp", "text/html; charset=UTF-8");
+                //include(request, response, "/view/password-reset.jsp", "text/html; charset=UTF-8");
+                //include(request, response, this.passwordResetPage, "text/html; charset=UTF-8");
+                includeUtf8(request, response, this.passwordResetPage);
 
                 return;
 
@@ -106,14 +124,16 @@ public class PasswordResetServlet extends ParentServlet {
 
 
                 //include(request, response, DIR_VIEW + "confirmationMessage.jsp");
-                include(request, response, "/view/confirmation-message.jsp");
+                //include(request, response, "/view/confirmation-message.jsp");
+                //include(request, response, "/view/confirmation-message.jsp");
+                includeUtf8(request, response, "/view/confirmation-message.jsp");
 
                 return;
             }
 
         } catch(Exception e) {
 
-            logger.warn("Error in ResetPasswordControl: "+e.getMessage());
+            logger.warn("Error in "+getClass().getName()+": "+e.getMessage());
             e.printStackTrace();
 
         }
@@ -131,8 +151,8 @@ public class PasswordResetServlet extends ParentServlet {
         //String password = request.getParameter("password");
         //String confirmPassword = request.getParameter("confirmPassword");
 
-        logger.debug("code = '"+code+"'");
-        logger.debug("hash = '"+hash+"'");
+        logger.debug("code = "+code);
+        logger.debug("hash = "+hash);
         //logger.debug("doPost(request, response): password = '"+password+"', confirmPassword = '"+confirmPassword+"'");
 
         /*
@@ -181,7 +201,8 @@ public class PasswordResetServlet extends ParentServlet {
                     //response.sendRedirect(com.ispaces.web.servlet.InitServlet.init.getProperty("contextUrl"));
                     //response.sendRedirect(com.ispaces.web.servlet.InitServlet.init.getProperty("contextUrl")+"/admin/login");
                     //include(request, response, DIR_VIEW+"admin/login.jsp", "text/html; charset=UTF-8");
-                    include(request, response, "/view/login.jsp");
+                    //include(request, response, "/view/login.jsp");
+                    includeUtf8(request, response, this.loginPage);
 
                     //ResetPasswordDatabaseManager.deleteActivationCode(user.getId(), code);  // Delete the reset code after it has been used.
                     //ResetPasswordDatabaseManager.deleteActivationCode(user.getId());  // Delete the reset code after it has been used.

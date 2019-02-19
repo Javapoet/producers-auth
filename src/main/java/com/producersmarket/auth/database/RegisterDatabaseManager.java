@@ -70,7 +70,7 @@ public class RegisterDatabaseManager {
     }
 
     public static void insertActivationCode(int userId, String code) throws SQLException, Exception {
-        logger.debug("insertActivationCode(userId:"+userId+", '"+code+"')");
+        logger.debug("insertActivationCode("+userId+", '"+code+"')");
 
         ConnectionManager connectionManager = new ConnectionManager(className, insertActivationCode);
 
@@ -78,7 +78,7 @@ public class RegisterDatabaseManager {
 
             //String sql = "UPDATE user SET activation_code=? WHERE id=?";
             //PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
-            PreparedStatement preparedStatement = connectionManager.loadStatement("updateActivationCode");
+            PreparedStatement preparedStatement = connectionManager.loadStatement(insertActivationCode);
             preparedStatement.setString(1, code);
             preparedStatement.setInt(2, userId);
             preparedStatement.executeUpdate();
@@ -104,7 +104,7 @@ public class RegisterDatabaseManager {
 
             //String sql = "UPDATE user SET activation_code = ? WHERE id = ?";
             //PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
-            PreparedStatement preparedStatement = connectionManager.loadStatement("updateActivationCode");
+            PreparedStatement preparedStatement = connectionManager.loadStatement("deleteActivationCode");
             preparedStatement.setString(1, null);
             preparedStatement.setInt(2, userId);
             preparedStatement.executeUpdate();
@@ -154,7 +154,7 @@ public class RegisterDatabaseManager {
 
             //String sql = "UPDATE user SET activation_code=? WHERE email=?";
             //PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
-            PreparedStatement preparedStatement = connectionManager.loadStatement("updateActivationCode");
+            PreparedStatement preparedStatement = connectionManager.loadStatement("insertActivationCodeByEmail");
             preparedStatement.setString(1, code);
             preparedStatement.setString(2, email);
             preparedStatement.executeUpdate();

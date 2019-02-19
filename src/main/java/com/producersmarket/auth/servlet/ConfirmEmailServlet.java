@@ -69,7 +69,7 @@ public class ConfirmEmailServlet extends ParentServlet {
                 
                 //include(request, response, "/view/home.jsp", "text/html; charset=UTF-8");
                 //include(request, response, "/view/login.jsp", "text/html; charset=UTF-8");
-                include(request, response, "/view/user-profile.jsp", "text/html; charset=UTF-8");
+                //include(request, response, "/view/user-profile.jsp", "text/html; charset=UTF-8");
                 //includeUtf8(request, response, this.confirmEmailPage);
                 includeUtf8(request, response, this.confirmEmailPage != null ? this.confirmEmailPage : "/view/confirm-email.jsp");
 

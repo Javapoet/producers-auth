@@ -14,7 +14,7 @@ import com.ispaces.mail.model.PreparedEmail;
 import com.ispaces.mail.model.PreparedEmails;
 import com.ispaces.util.SecurityUtil;
 
-import com.producersmarket.auth.database.RegisterDatabaseManager;
+//import com.producersmarket.auth.database.RegisterDatabaseManager;
 
 public class RegisterMailer implements Runnable {
 
@@ -124,7 +124,8 @@ public class RegisterMailer implements Runnable {
         try {
 
             //RegistrationManager.insertActivationCode(this.user.getId(), this.activationCode);
-            RegisterDatabaseManager.insertActivationCode(this.toAddress, this.activationCode);
+            //RegisterDatabaseManager.insertActivationCode(this.toAddress, this.activationCode);
+            com.producersmarket.auth.database.RegisterDatabaseManager.insertActivationCode(this.toAddress, this.activationCode);
 
             String resetLink = new StringBuilder()
               .append(this.contextUrl)
@@ -216,6 +217,14 @@ public class RegisterMailer implements Runnable {
         } else {
             registerMailer.sendEmail();
         }
+
+    }
+
+    public static void send(Properties properties) throws MessagingException {
+        logger.debug("send("+properties+")");
+
+        RegisterMailer registerMailer = new RegisterMailer(properties);
+        registerMailer.sendEmail();
 
     }
 
