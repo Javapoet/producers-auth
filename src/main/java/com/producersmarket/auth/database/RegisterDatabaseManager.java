@@ -9,7 +9,8 @@ import java.sql.SQLException;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
-import com.ispaces.database.connection.ConnectionManager;
+import com.ispaces.dbcp.ConnectionManager;
+import com.ispaces.dbcp.ConnectionPool;
 
 public class RegisterDatabaseManager {
 
@@ -69,10 +70,22 @@ public class RegisterDatabaseManager {
         return -1;
     }
 
-    public static void insertActivationCode(int userId, String code) throws SQLException, Exception {
-        logger.debug("insertActivationCode("+userId+", '"+code+"')");
+    public static void insertActivationCode(int userId, String code, Object connectionPoolObject) throws SQLException, Exception {
+        logger.debug("insertActivationCode("+userId+", "+code+", connectionPoolObject)");
+        
+        insertActivationCode(userId, code, (ConnectionPool) connectionPoolObject);
+    }
 
-        ConnectionManager connectionManager = new ConnectionManager(className, insertActivationCode);
+    public static void insertActivationCode(int userId, String code, ConnectionPool connectionPool) throws SQLException, Exception {
+        logger.debug("insertActivationCode("+userId+", "+code+", connectionPool)");
+
+        insertActivationCode(userId, code, new ConnectionManager(connectionPool));
+    }
+
+    public static void insertActivationCode(int userId, String code, ConnectionManager connectionManager) throws SQLException, Exception {
+        logger.debug("insertActivationCode("+userId+", "+code+", connectionManager)");
+
+        //ConnectionManager connectionManager = new ConnectionManager(className, insertActivationCode);
 
         try {
 
@@ -145,10 +158,24 @@ public class RegisterDatabaseManager {
 
     }
 
-    public static void insertActivationCode(String email, String code) throws SQLException, Exception {
-        logger.debug("insertActivationCode("+email+", '"+code+"')");
+    public static void insertActivationCode(String email, String code, Object connectionPoolObject) throws SQLException, Exception {
+        logger.debug("insertActivationCode("+email+", "+code+", connectionPoolObject)");
+        
+        insertActivationCode(email, code, (ConnectionPool) connectionPoolObject);
+    }
 
-        ConnectionManager connectionManager = new ConnectionManager(className, insertActivationCode);
+    public static void insertActivationCode(String email, String code, ConnectionPool connectionPool) throws SQLException, Exception {
+        logger.debug("insertActivationCode("+email+", "+code+", connectionPool)");
+
+        insertActivationCode(email, code, new ConnectionManager(connectionPool));
+    }
+
+    //public static void insertActivationCode(String email, String code) throws SQLException, Exception {
+    public static void insertActivationCode(String email, String code, ConnectionManager connectionManager) throws SQLException, Exception {
+        //logger.debug("insertActivationCode("+email+", '"+code+"')");
+        logger.debug("insertActivationCode("+email+", "+code+", connectionManager)");
+
+        //ConnectionManager connectionManager = new ConnectionManager(className, insertActivationCode);
 
         try {
 

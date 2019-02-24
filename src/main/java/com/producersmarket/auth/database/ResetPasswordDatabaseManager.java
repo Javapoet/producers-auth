@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
-import com.ispaces.database.connection.ConnectionManager;
+import com.ispaces.dbcp.ConnectionManager;
 
 public class ResetPasswordDatabaseManager {
 

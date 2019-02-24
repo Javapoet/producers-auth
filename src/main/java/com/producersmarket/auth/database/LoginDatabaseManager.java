@@ -12,7 +12,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
-import com.ispaces.database.connection.ConnectionManager;
+import com.ispaces.dbcp.ConnectionManager;
+import com.ispaces.dbcp.ConnectionPool;
 //import com.producersmarket.model.User;
 
 public class LoginDatabaseManager {
@@ -50,6 +51,44 @@ public class LoginDatabaseManager {
                 logger.error(stringWriter.toString());
             }
         }
+    }
+
+    public static int selectUserIdByEmail(String email, Object connectionPoolObject) throws SQLException, Exception {
+        logger.debug("selectUserIdByEmail("+email+", Object: "+connectionPoolObject+")");
+
+        return selectUserIdByEmail(email, (ConnectionPool) connectionPoolObject);
+    }
+
+    public static int selectUserIdByEmail(String email, ConnectionPool connectionPool) throws SQLException, Exception {
+        logger.debug("selectUserIdByEmail("+email+", ConnectionPool: "+connectionPool+")");
+
+        //ConnectionManager connectionManager = new ConnectionManager(className, com.producersmarket.servlet.InitServlet.connectionPool);
+        //ConnectionManager connectionManager = new ConnectionManager();
+        //ConnectionManager connectionManager = new ConnectionManager(className);
+        ConnectionManager connectionManager = new ConnectionManager(connectionPool);
+
+        return selectUserIdByEmail(email, connectionManager);
+    }
+
+    public static int selectUserIdByEmail(String email, ConnectionManager connectionManager) throws SQLException, Exception {
+        logger.debug("selectUserIdByEmail("+email+", "+connectionManager+")");
+
+        try {
+
+            PreparedStatement preparedStatement = connectionManager.loadStatement("selectUserIdByEmail");
+            preparedStatement.setString(1, email);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if(resultSet.next()) {
+
+                return resultSet.getInt(1);
+            }
+
+        } finally {
+            connectionManager.commit();
+        }
+
+        return -1;
     }
 
     public static int selectUserIdByEmail(String email) throws SQLException, Exception {

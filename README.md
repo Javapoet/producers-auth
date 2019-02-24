@@ -7,3 +7,5 @@
 0.0.0.13 RegisterMailer better exception handling and returning resetLink even if mail fails.
 0.0.0.14 Made RegisterMailer multipart alternative for sending HTML content
 0.0.0.15 Changed SmtpClient provider to Javapoets for RegisterMailer
+0.0.0.17 Added SecurityUtil.java for SHA1 password hashing
+0.0.0.17 Dynamically injecting the ConnectionPool object

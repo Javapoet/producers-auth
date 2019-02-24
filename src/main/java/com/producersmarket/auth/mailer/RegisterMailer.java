@@ -10,6 +10,8 @@ import javax.mail.MessagingException;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
+import com.ispaces.dbcp.ConnectionPool;
+
 /*
 import com.ispaces.mail.model.MailClient;
 import com.ispaces.mail.model.MailMessage;
@@ -17,14 +19,16 @@ import com.ispaces.mail.model.MailMessage;
 import com.ispaces.mail.model.PreparedEmail;
 import com.ispaces.mail.model.PreparedEmails;
 import com.ispaces.mail.util.HttpUtil;
-import com.ispaces.util.SecurityUtil;
+//import com.ispaces.util.SecurityUtil;
 
 import com.javapoets.mail.client.SmtpClient;
 import com.javapoets.mail.server.smtp.SmtpMessage;
 //import com.javapoets.mail.model.SmtpMessage; // @Future
 import com.javapoets.mail.model.MailMessage;
 
+import com.producersmarket.auth.util.SecurityUtil;
 import com.producersmarket.auth.database.RegisterDatabaseManager;
+import com.producersmarket.auth.util.UniqueId;
 
 public class RegisterMailer implements Runnable {
 
@@ -57,6 +61,7 @@ public class RegisterMailer implements Runnable {
     private Properties properties = null;
     //private MailClient mailClient;
     private SmtpClient mailClient;
+    private ConnectionPool connectionPool;
 
     public RegisterMailer(String emailAddress) {
         logger.debug("("+emailAddress+")");
@@ -88,6 +93,29 @@ public class RegisterMailer implements Runnable {
         this.fromAddress = properties.getProperty(EMAIL_FROM);
         this.toAddress   = properties.getProperty(EMAIL_TO);
         this.contextUrl  = properties.getProperty(CONTEXT_URL);
+
+        String name = properties.getProperty("name");
+        String subject = properties.getProperty("subject");
+
+        logger.debug("this.smtpServer = '"+this.smtpServer+"', this.smtpPort = '"+this.smtpPort+"'");
+
+        logger.debug("to = '"+this.toAddress+"', fromAddress = '"+fromAddress+"'");
+    }
+
+    public RegisterMailer(Properties properties, Object connectionPoolObject) {
+        logger.debug("("+properties+", connectionPoolObject)");
+
+        this.properties = properties;
+
+        this.smtpServer  = properties.getProperty(SMTP_SERVER);
+        this.smtpPort    = properties.getProperty(SMTP_PORT);
+        this.smtpUser    = properties.getProperty(SMTP_USER);
+        this.smtpPass    = properties.getProperty(SMTP_PASS);
+        this.fromAddress = properties.getProperty(EMAIL_FROM);
+        this.toAddress   = properties.getProperty(EMAIL_TO);
+        this.contextUrl  = properties.getProperty(CONTEXT_URL);
+
+        this.connectionPool = (ConnectionPool)connectionPoolObject;
 
         String name = properties.getProperty("name");
         String subject = properties.getProperty("subject");
@@ -129,7 +157,7 @@ public class RegisterMailer implements Runnable {
     public String sendEmail() {
         logger.debug("sendEmail()");
 
-        String uniqueId = com.ispaces.util.UniqueId.getUniqueId();
+        String uniqueId = UniqueId.getUniqueId();
         String millis = String.valueOf(System.currentTimeMillis());
         String activationCode = this.activationCode = SecurityUtil.makeAuthToken(millis, uniqueId);
 
@@ -145,7 +173,8 @@ public class RegisterMailer implements Runnable {
         try {
 
             //RegistrationManager.insertActivationCode(this.user.getId(), this.activationCode);
-            RegisterDatabaseManager.insertActivationCode(this.toAddress, activationCode);
+            //RegisterDatabaseManager.insertActivationCode(this.toAddress, activationCode);
+            RegisterDatabaseManager.insertActivationCode(this.toAddress, activationCode, this.connectionPool);
 
             //try {
 
@@ -346,6 +375,15 @@ public class RegisterMailer implements Runnable {
         logger.debug("send("+properties+")");
 
         RegisterMailer registerMailer = new RegisterMailer(properties);
+
+        return registerMailer.sendEmail();
+    }
+
+    public static String send(Properties properties, Object connectionPoolObject) throws MessagingException {
+        logger.debug("send("+properties+", connectionPoolObject)");
+
+        RegisterMailer registerMailer = new RegisterMailer(properties, connectionPoolObject);
+        
         return registerMailer.sendEmail();
     }
 

@@ -12,9 +12,11 @@ import com.ispaces.mail.model.MailClient;
 import com.ispaces.mail.model.MailMessage;
 import com.ispaces.mail.model.PreparedEmail;
 import com.ispaces.mail.model.PreparedEmails;
-import com.ispaces.util.SecurityUtil;
+//import com.ispaces.util.SecurityUtil;
 
+import com.producersmarket.auth.util.SecurityUtil;
 import com.producersmarket.auth.database.ResetPasswordDatabaseManager;
+import com.producersmarket.auth.util.UniqueId;
 
 public class ResetPasswordMailer
   implements Runnable {
@@ -120,7 +122,7 @@ public class ResetPasswordMailer
     public void sendEmail() throws MessagingException {
         logger.debug("sendEmail()");
 
-        String uniqueId = com.ispaces.util.UniqueId.getUniqueId();
+        String uniqueId = UniqueId.getUniqueId();
         String millis = String.valueOf(System.currentTimeMillis());
         this.activationCode = SecurityUtil.makeAuthToken(millis, uniqueId);
         logger.debug("this.activationCode = "+this.activationCode);

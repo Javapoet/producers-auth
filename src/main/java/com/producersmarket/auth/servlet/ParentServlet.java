@@ -16,7 +16,8 @@ import javax.servlet.ServletException;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
-import com.ispaces.database.connection.ConnectionPool;
+import com.ispaces.dbcp.ConnectionManager;
+import com.ispaces.dbcp.ConnectionPool;
 
 //public class ParentServlet extends InitServlet {
 public class ParentServlet extends HttpServlet {
@@ -167,9 +168,9 @@ public class ParentServlet extends HttpServlet {
                 logger.debug("connectionPoolProperties = "+connectionPoolProperties);
                 logger.debug("connectionPool = "+connectionPool);
 
-                com.ispaces.database.connection.ConnectionManager.loadStatements(connectionPool);
-                com.ispaces.database.manager.JavaClassManager.init(connectionPool);
-                com.ispaces.database.manager.ConnectionPoolManager.initConnectionPoolMap(connectionPool);
+                //ConnectionManager.loadStatements(connectionPool);
+                //com.ispaces.database.manager.JavaClassManager.init(connectionPool);
+                //com.ispaces.database.manager.ConnectionPoolManager.initConnectionPoolMap(connectionPool);
 
                 this.executor = new java.util.concurrent.ThreadPoolExecutor(
                     10

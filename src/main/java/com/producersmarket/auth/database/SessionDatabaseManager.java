@@ -2,13 +2,6 @@ package com.producersmarket.auth.database;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-/*
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-*/
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,7 +9,7 @@ import java.sql.SQLException;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
-import com.ispaces.database.connection.ConnectionManager;
+import com.ispaces.dbcp.ConnectionManager;
 
 import com.producersmarket.auth.model.Session;
 
@@ -26,73 +19,16 @@ public class SessionDatabaseManager {
     private static final String className = SessionDatabaseManager.class.getSimpleName();
 
     public static void insert(Session session) throws SQLException, Exception {
-        logger.debug("updateUserLoggedIn("+session+")");
+        logger.debug("insert("+session+")");
 
         ConnectionManager connectionManager = new ConnectionManager(className);
+        //ConnectionManager connectionManager = new ConnectionManager(getClass().getSimpleName());
+
+        String statementName = "insertSession";
 
         try {
 
-            /*
-            String[] fields = new String[] {
-                "user_id"
-              , "session_id"
-              , "user_agent"
-              , "remote_addr"
-              , "host"
-              , "protocol"
-              , "locale"
-              , "character_encoding"
-              , "accept"
-              , "accept_encoding"
-              , "accept_language"
-              , "accept_charset"
-              , "referer"
-              , "server_name"
-              , "server_port"
-              , "server_info"
-              , "updated_by"
-              , "created_by"
-              , "date_created"
-            };
-            */
-
-            /*
-            String fields = new StringBuilder()
-              .append("userid")
-              .append(", sessionid")
-              .append(", useragent")
-              .append(", remoteaddr")
-              .append(", host")
-              .append(", protocol")
-              .append(", locale")
-              .append(", characterencoding")
-              .append(", accept")
-              .append(", acceptencoding")
-              .append(", acceptlanguage")
-              .append(", acceptcharset")
-              .append(", referer")
-              .append(", servername")
-              .append(", serverport")
-              .append(", serverinfo")
-              .append(", updatedby")
-              .append(", createdby")
-              .append(", datecreated")
-              .toString();
-              
-            String values = "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW()";
-
-            String sql = new StringBuilder()
-              .append("INSERT INTO session (")
-              .append(fields)
-              .append(") VALUES (")
-              .append(values)
-              .append(")")
-              .toString();
-
-            PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
-            //PreparedStatement preparedStatement = connectionManager.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            */
-            PreparedStatement preparedStatement = connectionManager.loadStatement("insertSession");
+            PreparedStatement preparedStatement = connectionManager.loadStatement(statementName);
 
             preparedStatement.setInt(1, session.getUserId());
             preparedStatement.setString(2, session.getSessionId());
@@ -112,17 +48,23 @@ public class SessionDatabaseManager {
             preparedStatement.setString(16, session.getServerInfo());
             preparedStatement.setInt(17, session.getUserId());
             preparedStatement.setInt(18, session.getUserId());
+
             preparedStatement.executeUpdate();
 
             //ResultSet rs = preparedStatement.getGeneratedKeys();
             //if(rs.next()) return rs.getInt(1);
 
         } catch(Exception e) {
+
+            logger.error(new StringBuilder().append(e.getMessage()).append(" ").append(statementName));
+
             StringWriter stringWriter = new StringWriter();
             PrintWriter printWriter = new PrintWriter(stringWriter);
             e.printStackTrace(printWriter);
             logger.error(stringWriter.toString());
+
         } finally {
+
             try {
                 connectionManager.commit();
             } catch(Exception exception) {
@@ -131,6 +73,7 @@ public class SessionDatabaseManager {
                 exception.printStackTrace(printWriter);
                 logger.error(stringWriter.toString());
             }
+
         }
     }
 
