@@ -28,17 +28,17 @@ public class RegisterDatabaseManager {
     public static void updatePassword(int userId, String password) throws SQLException, Exception {
         logger.debug("updatePassword("+userId+", '"+password+"')");
 
-        ConnectionManager connMgr = new ConnectionManager(className, UPDATE_PASSWORD_HASH);
+        ConnectionManager connectionManager = new ConnectionManager(className, UPDATE_PASSWORD_HASH);
 
         try {
 
-            PreparedStatement stmt = connMgr.loadStatement(UPDATE_PASSWORD_HASH);
+            PreparedStatement stmt = connectionManager.loadStatement(UPDATE_PASSWORD_HASH);
             stmt.setString(1, password);
             stmt.setInt(2, userId);
             stmt.executeUpdate();
 
         } finally {
-            connMgr.commit();
+            connectionManager.commit();
         }
 
     }
@@ -46,30 +46,28 @@ public class RegisterDatabaseManager {
     public static int selectUserIdByPasswordResetCode(String code) throws SQLException, Exception {
         logger.debug("selectUserByPasswordResetCode("+code+")");
 
-        ConnectionManager connMgr = new ConnectionManager(className, selectUserIdByPasswordResetCode);
+        ConnectionManager connectionManager = new ConnectionManager(className, selectUserIdByPasswordResetCode);
 
         try {
 
-            //PreparedStatement preparedStatement = connMgr.loadStatement(selectUserIdByPasswordResetCode);
+            //PreparedStatement preparedStatement = connectionManager.loadStatement(selectUserIdByPasswordResetCode);
             //String sql = "SELECT id FROM user WHERE activation_code = ?";
-            //PreparedStatement preparedStatement = connMgr.prepareStatement(sql);
-            PreparedStatement preparedStatement = connMgr.loadStatement("selectUserIdByPasswordResetCode");
+            //PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
+            PreparedStatement preparedStatement = connectionManager.loadStatement("selectUserIdByPasswordResetCode");
             preparedStatement.setString(1, code);
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            if(resultSet.next()) {
-
-                return resultSet.getInt(1);
-            }
+            if(resultSet.next()) return resultSet.getInt(1);
 
         } finally {
-            connMgr.commit();
+            connectionManager.commit();
         }
 
         return -1;
     }
 
+    /*
     public static void insertActivationCode(int userId, String code, Object connectionPoolObject) throws SQLException, Exception {
         logger.debug("insertActivationCode("+userId+", "+code+", connectionPoolObject)");
         
@@ -81,6 +79,7 @@ public class RegisterDatabaseManager {
 
         insertActivationCode(userId, code, new ConnectionManager(connectionPool));
     }
+    */
 
     public static void insertActivationCode(int userId, String code, ConnectionManager connectionManager) throws SQLException, Exception {
         logger.debug("insertActivationCode("+userId+", "+code+", connectionManager)");
@@ -229,18 +228,18 @@ public class RegisterDatabaseManager {
     public static void insert(int userId, String code) throws SQLException, Exception {
         logger.debug("insert("+userId+", '"+code+"')");
 
-        ConnectionManager connMgr = new ConnectionManager(className);
+        ConnectionManager connectionManager = new ConnectionManager(className);
 
         try {
 
-            PreparedStatement stmt = connMgr.loadStatement(INSERT_FORGOT_PASSWORD);
+            PreparedStatement stmt = connectionManager.loadStatement(INSERT_FORGOT_PASSWORD);
 
             stmt.setString(1, code);
             stmt.setInt(2, userId);
             stmt.executeUpdate();
 
         } finally {
-            connMgr.commit();
+            connectionManager.commit();
         }
 
     }
@@ -248,17 +247,17 @@ public class RegisterDatabaseManager {
     public static void delete(String code) throws SQLException, Exception {
         logger.debug("delete('"+code+"')");
 
-        ConnectionManager connMgr = new ConnectionManager(className);
+        ConnectionManager connectionManager = new ConnectionManager(className);
 
         try {
 
-            PreparedStatement stmt = connMgr.loadStatement(DELETE_FORGOT_PASSWORD);
+            PreparedStatement stmt = connectionManager.loadStatement(DELETE_FORGOT_PASSWORD);
 
             stmt.setString(1, code);
             stmt.executeUpdate();
 
         } finally {
-            connMgr.commit();
+            connectionManager.commit();
         }
 
     }

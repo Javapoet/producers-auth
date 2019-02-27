@@ -10,7 +10,8 @@ import javax.mail.MessagingException;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
-import com.ispaces.dbcp.ConnectionPool;
+//import com.ispaces.dbcp.ConnectionPool;
+import com.ispaces.dbcp.ConnectionManager;
 
 /*
 import com.ispaces.mail.model.MailClient;
@@ -24,7 +25,7 @@ import com.ispaces.mail.util.HttpUtil;
 import com.javapoets.mail.client.SmtpClient;
 import com.javapoets.mail.server.smtp.SmtpMessage;
 //import com.javapoets.mail.model.SmtpMessage; // @Future
-import com.javapoets.mail.model.MailMessage;
+//import com.javapoets.mail.model.MailMessage;
 
 import com.producersmarket.auth.util.SecurityUtil;
 import com.producersmarket.auth.database.RegisterDatabaseManager;
@@ -61,7 +62,8 @@ public class RegisterMailer implements Runnable {
     private Properties properties = null;
     //private MailClient mailClient;
     private SmtpClient mailClient;
-    private ConnectionPool connectionPool;
+    //private ConnectionPool connectionPool;
+    private ConnectionManager connectionManager;
 
     public RegisterMailer(String emailAddress) {
         logger.debug("("+emailAddress+")");
@@ -102,6 +104,7 @@ public class RegisterMailer implements Runnable {
         logger.debug("to = '"+this.toAddress+"', fromAddress = '"+fromAddress+"'");
     }
 
+    /*
     public RegisterMailer(Properties properties, Object connectionPoolObject) {
         logger.debug("("+properties+", connectionPoolObject)");
 
@@ -115,7 +118,31 @@ public class RegisterMailer implements Runnable {
         this.toAddress   = properties.getProperty(EMAIL_TO);
         this.contextUrl  = properties.getProperty(CONTEXT_URL);
 
-        this.connectionPool = (ConnectionPool)connectionPoolObject;
+        //this.connectionPool = (ConnectionPool)connectionPoolObject;
+        this.connectionManager = new ConnectionManager( (ConnectionPool) connectionPoolObject );
+
+        String name = properties.getProperty("name");
+        String subject = properties.getProperty("subject");
+
+        logger.debug("this.smtpServer = '"+this.smtpServer+"', this.smtpPort = '"+this.smtpPort+"'");
+
+        logger.debug("to = '"+this.toAddress+"', fromAddress = '"+fromAddress+"'");
+    }
+    */
+
+    public RegisterMailer(Properties properties, ConnectionManager connectionManager) {
+        logger.debug("("+properties+", connectionManager)");
+
+        this.properties = properties;
+        this.connectionManager = connectionManager;
+
+        this.smtpServer  = properties.getProperty(SMTP_SERVER);
+        this.smtpPort    = properties.getProperty(SMTP_PORT);
+        this.smtpUser    = properties.getProperty(SMTP_USER);
+        this.smtpPass    = properties.getProperty(SMTP_PASS);
+        this.fromAddress = properties.getProperty(EMAIL_FROM);
+        this.toAddress   = properties.getProperty(EMAIL_TO);
+        this.contextUrl  = properties.getProperty(CONTEXT_URL);
 
         String name = properties.getProperty("name");
         String subject = properties.getProperty("subject");
@@ -174,7 +201,8 @@ public class RegisterMailer implements Runnable {
 
             //RegistrationManager.insertActivationCode(this.user.getId(), this.activationCode);
             //RegisterDatabaseManager.insertActivationCode(this.toAddress, activationCode);
-            RegisterDatabaseManager.insertActivationCode(this.toAddress, activationCode, this.connectionPool);
+            //RegisterDatabaseManager.insertActivationCode(this.toAddress, activationCode, this.connectionPool);
+            RegisterDatabaseManager.insertActivationCode(this.toAddress, activationCode, this.connectionManager);
 
             //try {
 
@@ -190,7 +218,7 @@ public class RegisterMailer implements Runnable {
                 PreparedEmail preparedEmail = null;
                 try {
 
-                    preparedEmail = PreparedEmails.getPreparedEmail(messageName);
+                    preparedEmail = PreparedEmails.getPreparedEmail(messageName, this.connectionManager);
 
                 } catch(Exception e) {
 
@@ -379,10 +407,20 @@ public class RegisterMailer implements Runnable {
         return registerMailer.sendEmail();
     }
 
+    /*
     public static String send(Properties properties, Object connectionPoolObject) throws MessagingException {
         logger.debug("send("+properties+", connectionPoolObject)");
 
         RegisterMailer registerMailer = new RegisterMailer(properties, connectionPoolObject);
+        
+        return registerMailer.sendEmail();
+    }
+    */
+
+    public static String send(Properties properties, ConnectionManager connectionManager) throws MessagingException {
+        logger.debug("send("+properties+", connectionManager)");
+
+        RegisterMailer registerMailer = new RegisterMailer(properties, connectionManager);
         
         return registerMailer.sendEmail();
     }

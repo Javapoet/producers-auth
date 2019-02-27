@@ -8,11 +8,11 @@ import javax.mail.MessagingException;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
+import com.ispaces.dbcp.ConnectionManager;
 import com.ispaces.mail.model.MailClient;
 import com.ispaces.mail.model.MailMessage;
 import com.ispaces.mail.model.PreparedEmail;
 import com.ispaces.mail.model.PreparedEmails;
-//import com.ispaces.util.SecurityUtil;
 
 import com.producersmarket.auth.util.SecurityUtil;
 import com.producersmarket.auth.database.ResetPasswordDatabaseManager;
@@ -48,6 +48,7 @@ public class ResetPasswordMailer
     private String contextUrl = null;
     private Properties properties = null;
     private MailClient mailClient;
+    private ConnectionManager connectionManager;
 
     public ResetPasswordMailer(String emailAddress) {
         logger.debug("("+emailAddress+")");
@@ -90,6 +91,32 @@ public class ResetPasswordMailer
         logger.debug("this.toAddress = "+this.toAddress);
         logger.debug("this.fromAddress = "+this.fromAddress);
     }
+    
+    public ResetPasswordMailer(Properties properties, ConnectionManager connectionManager) {
+        logger.debug("("+properties+", connectionManager)");
+
+        this.properties = properties;
+        this.connectionManager = connectionManager;
+
+        this.smtpServer  = properties.getProperty(SMTP_SERVER);
+        this.smtpPort    = properties.getProperty(SMTP_PORT);
+        this.smtpUser    = properties.getProperty(SMTP_USER);
+        this.smtpPass    = properties.getProperty(SMTP_PASS);
+        this.fromAddress = properties.getProperty(EMAIL_FROM);
+        this.toAddress   = properties.getProperty(EMAIL_TO);
+        this.contextUrl  = properties.getProperty(CONTEXT_URL);
+
+        String name = properties.getProperty("name");
+        String subject = properties.getProperty("subject");
+
+        logger.debug("this.smtpServer = "+this.smtpServer);
+        logger.debug("this.smtpPort = "+this.smtpPort);
+        logger.debug("this.smtpUser = "+this.smtpUser);
+        logger.debug("this.smtpPass = "+this.smtpPass);
+        logger.debug("this.toAddress = "+this.toAddress);
+        logger.debug("this.fromAddress = "+this.fromAddress);
+    }
+
 
     /*
     public void insertActivationCode() throws MessagingException, Exception {
@@ -230,6 +257,19 @@ public class ResetPasswordMailer
         logger.debug("send("+properties+", differentThread:"+(differentThread)+")");
 
         ResetPasswordMailer resetPasswordMailer = new ResetPasswordMailer(properties);
+
+        if(differentThread) {
+            new Thread(resetPasswordMailer).start();
+        } else {
+            resetPasswordMailer.sendEmail();
+        }
+
+    }
+
+    public static void send(Properties properties, ConnectionManager connectionManager, boolean differentThread) throws MessagingException {
+        logger.debug("send("+properties+", "+connectionManager+", differentThread:"+(differentThread)+")");
+
+        ResetPasswordMailer resetPasswordMailer = new ResetPasswordMailer(properties, connectionManager);
 
         if(differentThread) {
             new Thread(resetPasswordMailer).start();

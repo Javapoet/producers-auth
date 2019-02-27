@@ -23,7 +23,6 @@ apply plugin: 'war'
 targetCompatibility = "1.8"
 sourceCompatibility = "1.8"
 group = 'com.producersmarket'
-def jettyVersion = "9.4.7.v20170914"
 
 List compileList =  [
 
@@ -32,20 +31,20 @@ List compileList =  [
     , "org.apache.commons:commons-text:1.6"
     , "commons-net:commons-net:3.5"
     , "org.json:json:20140107"
-    , "com.sun.mail:mailapi:1.5.6"
-    , "com.sun.mail:smtp:1.5.6"
+    , "com.sun.mail:mailapi:${project.property('javamail.version')}"
+    , "com.sun.mail:smtp:${project.property('javamail.version')}"
     , "mysql:mysql-connector-java:8.0.11"
-    , "org.eclipse.jetty:jetty-annotations:"+jettyVersion
-    , "org.eclipse.jetty:jetty-server:"+jettyVersion
-    , "org.eclipse.jetty:jetty-continuation:"+jettyVersion
-    , "org.eclipse.jetty:jetty-http:"+jettyVersion
-    , "org.eclipse.jetty:jetty-server:"+jettyVersion
-    , "org.eclipse.jetty:jetty-servlets:"+jettyVersion
-    , "org.eclipse.jetty:jetty-servlet:"+jettyVersion
-    , "org.eclipse.jetty:jetty-webapp:"+jettyVersion
-    , "org.eclipse.jetty:jetty-util:"+jettyVersion
+    , "org.eclipse.jetty:jetty-annotations:${project.property('jetty.version')}"
+    , "org.eclipse.jetty:jetty-server:${project.property('jetty.version')}"
+    , "org.eclipse.jetty:jetty-continuation:${project.property('jetty.version')}"
+    , "org.eclipse.jetty:jetty-http:${project.property('jetty.version')}"
+    , "org.eclipse.jetty:jetty-server:${project.property('jetty.version')}"
+    , "org.eclipse.jetty:jetty-servlets:${project.property('jetty.version')}"
+    , "org.eclipse.jetty:jetty-servlet:${project.property('jetty.version')}"
+    , "org.eclipse.jetty:jetty-webapp:${project.property('jetty.version')}"
+    , "org.eclipse.jetty:jetty-util:${project.property('jetty.version')}"
     , "com.atlassian.commonmark:commonmark:0.10.0"
-    , "org.eclipse.jetty:apache-jsp:9.4.7.v20170914"
+    , "org.eclipse.jetty:apache-jsp:${project.property('jetty.version')}"
     , "org.mortbay.jasper:apache-el:8.5.23"
     , fileTree(dir: 'src/main/webapp/WEB-INF/lib', include: '*.jar')
 ]
@@ -56,7 +55,7 @@ dependencies {
 
 task printClasspath {
     doLast {
-        configurations.testRuntime.each { println it }
+          configurations.testRuntime.each { println it }
     }
 }
 

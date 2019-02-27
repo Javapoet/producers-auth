@@ -42,6 +42,8 @@ public class ParentServlet extends HttpServlet {
     public Properties properties = null;
     //public static java.util.concurrent.Executor executor = null;
     public java.util.concurrent.Executor executor = null;
+    private Object connectionPoolObject = null;
+    private ConnectionManager connectionManager = null;
 	
     public String doubleQuotes(String string) {
         return new StringBuilder().append(DOUBLE_QUOTE).append(string).append(DOUBLE_QUOTE).toString();
@@ -51,6 +53,14 @@ public class ParentServlet extends HttpServlet {
         //return super.properties;
         //return super.getProperties();
         return null;
+    }
+
+    public Object getConnectionPool() {
+        return this.connectionPoolObject;
+    }
+
+    public ConnectionManager getConnectionManager() {
+        return this.connectionManager;
     }
 
     public void init(ServletConfig config) throws ServletException {
@@ -63,6 +73,12 @@ public class ParentServlet extends HttpServlet {
 
         String contextInitialized = (String)this.servletContext.getAttribute("contextInitialized");
         logger.debug("contextInitialized = "+contextInitialized);
+
+        this.connectionPoolObject = this.servletContext.getAttribute("connectionPool");
+        logger.debug("connectionPoolObject = "+connectionPoolObject);
+
+        this.connectionManager = new ConnectionManager( (ConnectionPool) this.connectionPoolObject );
+
 
         if(contextInitialized == null) {
 

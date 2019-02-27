@@ -123,6 +123,45 @@ public class LoginDatabaseManager {
         return -1;
     }
 
+    public static String selectPasswordHashByEmail(String email, Object connectionPoolObject) throws SQLException, Exception {
+        logger.debug("selectPasswordHashByEmail("+email+", Object: "+connectionPoolObject+")");
+
+        return selectPasswordHashByEmail(email, (ConnectionPool) connectionPoolObject);
+    }
+
+    public static String selectPasswordHashByEmail(String email, ConnectionPool connectionPool) throws SQLException, Exception {
+        logger.debug("selectPasswordHashByEmail("+email+", ConnectionPool: "+connectionPool+")");
+
+        //ConnectionManager connectionManager = new ConnectionManager(className, com.producersmarket.servlet.InitServlet.connectionPool);
+        //ConnectionManager connectionManager = new ConnectionManager();
+        //ConnectionManager connectionManager = new ConnectionManager(className);
+        ConnectionManager connectionManager = new ConnectionManager(connectionPool);
+
+        return selectPasswordHashByEmail(email, connectionManager);
+    }
+
+    public static String selectPasswordHashByEmail(String email, ConnectionManager connectionManager) throws SQLException, Exception {
+        logger.debug("selectPasswordHashByEmail("+email+", "+connectionManager+")");
+
+        try {
+
+            //String sql = "SELECT password_hash FROM user WHERE email = ?";
+            //PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
+            PreparedStatement preparedStatement = connectionManager.loadStatement("selectPasswordHashByEmail");
+            preparedStatement.setString(1, email);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if(resultSet.next()) {
+                return resultSet.getString(1);
+            }
+
+        } finally {
+            connectionManager.commit();
+        }
+
+        return null;
+    }
+
     public static String selectPasswordHashByEmail(String email) throws SQLException, Exception {
         logger.debug("selectPasswordHashByEmail('"+email+"')");
 

@@ -204,7 +204,9 @@ public class LoginServlet extends ParentServlet {
 
         try {
 
-            String passwordHash = LoginDatabaseManager.selectPasswordHashByEmail(email);
+            //String passwordHash = LoginDatabaseManager.selectPasswordHashByEmail(email);
+            //String passwordHash = LoginDatabaseManager.selectPasswordHashByEmail(email, getServletContext().getAttribute("connectionPool"));
+            String passwordHash = LoginDatabaseManager.selectPasswordHashByEmail(email, getConnectionPool());
             logger.debug("passwordHash = "+passwordHash);
 
             if(
@@ -216,7 +218,8 @@ public class LoginServlet extends ParentServlet {
                 logger.debug("httpSession.getId() = "+httpSession.getId());
 
                 //User user = UserDatabaseManager.selectUserByEmail(email);
-                int userId = LoginDatabaseManager.selectUserIdByEmail(email);
+                //int userId = LoginDatabaseManager.selectUserIdByEmail(email);
+                int userId = LoginDatabaseManager.selectUserIdByEmail(email, getConnectionPool());
                 //logger.debug("user = "+user);
                 logger.debug("userId = "+userId);
 
@@ -280,7 +283,9 @@ public class LoginServlet extends ParentServlet {
                     int sessionId = SessionManager.insert(session);
                     SessionDatabaseManager.insertSession(user.getId(), session.getId());
                     */
-                    SessionDatabaseManager.insert(session);
+                    //SessionDatabaseManager.insert(session);
+                    //SessionDatabaseManager.insert(session, getConnectionPool());
+                    SessionDatabaseManager.insert(session, getConnectionManager());
 
                     /*
                     LoginDatabaseManager.updateUserLoggedIn(user.getId(), session.getId());

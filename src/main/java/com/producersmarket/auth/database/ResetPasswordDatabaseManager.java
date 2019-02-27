@@ -120,6 +120,29 @@ public class ResetPasswordDatabaseManager {
 
     }
 
+    public static void insertActivationCode(String email, String code, ConnectionManager connectionManager) throws SQLException, Exception {
+        logger.debug("insertActivationCode("+email+", "+code+", connectionManager)");
+
+        try {
+
+            //String sql = "UPDATE user SET activation_code=? WHERE email=?";
+            //PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
+            PreparedStatement preparedStatement = connectionManager.loadStatement("insertActivationCode");
+            preparedStatement.setString(1, code);
+            preparedStatement.setString(2, email);
+            preparedStatement.executeUpdate();
+
+        } catch(Exception e) {
+            StringWriter stringWriter = new StringWriter();
+            PrintWriter printWriter = new PrintWriter(stringWriter);
+            e.printStackTrace(printWriter);
+            logger.error(stringWriter.toString());
+        } finally {
+            connectionManager.commit();
+        }
+
+    }
+
     public static void insertActivationCode(String email, String code) throws SQLException, Exception {
         logger.debug("insertActivationCode("+email+", '"+code+"')");
 
