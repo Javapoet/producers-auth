@@ -157,6 +157,27 @@ public class RegisterDatabaseManager {
 
     }
 
+    public static void updateName(int userId, String name, ConnectionManager connectionManager) throws SQLException, Exception {
+        logger.debug("updateName("+userId+", "+name+", connectionManager)");
+
+        try {
+
+            PreparedStatement preparedStatement = connectionManager.loadStatement("updateName");
+            preparedStatement.setString(1, name);
+            preparedStatement.setInt(2, userId);
+            preparedStatement.executeUpdate();
+
+        } catch(Exception e) {
+            StringWriter stringWriter = new StringWriter();
+            PrintWriter printWriter = new PrintWriter(stringWriter);
+            e.printStackTrace(printWriter);
+            logger.error(stringWriter.toString());
+        } finally {
+            connectionManager.commit();
+        }
+
+    }
+
     public static void insertActivationCode(String email, String code, Object connectionPoolObject) throws SQLException, Exception {
         logger.debug("insertActivationCode("+email+", "+code+", connectionPoolObject)");
         

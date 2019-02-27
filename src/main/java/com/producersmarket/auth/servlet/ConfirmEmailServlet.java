@@ -54,7 +54,7 @@ public class ConfirmEmailServlet extends ParentServlet {
             logger.debug("code = "+code);
 
             //User user = UserDatabaseManager.selectUserByPasswordResetCode(code);
-            int userId = ResetPasswordDatabaseManager.selectUserIdByPasswordResetCode(code);
+            int userId = ResetPasswordDatabaseManager.selectUserIdByPasswordResetCode(code, getConnectionManager());
 
             //if(user != null) {
             if(userId != -1) {
@@ -65,7 +65,7 @@ public class ConfirmEmailServlet extends ParentServlet {
                 request.setAttribute("code", code);
                 request.setAttribute("userId", userId);
 
-                ResetPasswordDatabaseManager.deleteActivationCode(userId);  // Delete the reset code after it has been used.
+                ResetPasswordDatabaseManager.deleteActivationCode(userId, getConnectionManager());  // Delete the reset code after it has been used.
                 
                 //include(request, response, "/view/home.jsp", "text/html; charset=UTF-8");
                 //include(request, response, "/view/login.jsp", "text/html; charset=UTF-8");
@@ -173,7 +173,7 @@ public class ConfirmEmailServlet extends ParentServlet {
                     logger.debug("userId = "+userId);
             */                    
 
-                    RegisterDatabaseManager.updateName(userId, name);
+                    RegisterDatabaseManager.updateName(userId, name), getConnectionManager();
 
                     //include(request, response, "/view/home.jsp");
                     includeUtf8(request, response, this.confirmEmailPage != null ? this.confirmEmailPage : "/view/confirm-email.jsp");
