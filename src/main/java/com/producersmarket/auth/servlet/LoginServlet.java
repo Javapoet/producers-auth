@@ -25,7 +25,9 @@ import org.apache.logging.log4j.LogManager;
 
 import com.producersmarket.auth.database.LoginDatabaseManager;
 import com.producersmarket.auth.database.SessionDatabaseManager;
+import com.producersmarket.auth.database.UserDatabaseManager;
 import com.producersmarket.auth.model.Session;
+import com.producersmarket.model.User;
 
 public class LoginServlet extends ParentServlet {
 
@@ -218,18 +220,28 @@ public class LoginServlet extends ParentServlet {
                 logger.debug("httpSession.getId() = "+httpSession.getId());
 
                 //User user = UserDatabaseManager.selectUserByEmail(email);
+                User user = UserDatabaseManager.selectUserByEmail(email, getConnectionManager());
                 //int userId = LoginDatabaseManager.selectUserIdByEmail(email);
-                int userId = LoginDatabaseManager.selectUserIdByEmail(email, getConnectionPool());
-                //logger.debug("user = "+user);
-                logger.debug("userId = "+userId);
+                //int userId = LoginDatabaseManager.selectUserIdByEmail(email, getConnectionPool());
 
-                //if(user != null) {
-                if(userId != -1) {
+                logger.debug("user = "+user);
+
+                if(user != null) {
+                //if(userId != -1) {
+
+                    int userId = user.getId();
+                    logger.debug("userId = "+userId);
 
                     //logger.debug("user.getId() = "+user.getId());
                     //httpSession.setAttribute("userId", user.getId());
                     //request.setAttribute("user", user);
-                    httpSession.setAttribute("userId", userId);
+                    httpSession.setAttribute("userId", userId); // set the userId on the session
+
+                    java.util.List<Integer> groupIdList = user.getGroupIdList();
+                    if(groupIdList != null) {
+                        //log.debug("httpSession.setAttribute('groups', "+groupIdList+")");
+                        httpSession.setAttribute("groups", groupIdList); // set the user groups on the session
+                    }
 
                     String serverInfo = getServletContext().getServerInfo();
                     String serverName = request.getServerName();

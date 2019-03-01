@@ -16,3 +16,4 @@
 0.0.0 build 23 Added `jetty.version`, `javamail.version` to `gradle.properties`
 0.0.0 build 24 Added `getConnectionManager()` to `ResetPasswordDatabaseManager` and `ConfirmEmailServlet`
 0.0.0 build 25 Added `httpSession.setAttribute("userId", userId)` to `ConfirmEmailServlet`
+0.0.0 build 26 Added `UserDatabaseManager` and `groupIdList`
