@@ -53,7 +53,7 @@ public class UserDatabaseManager {
 
         if(resultSet.next()) {
 
-            List<Integer> groupIdList = new ArrayList();
+            List<Integer> groupIdList = new ArrayList<Integer>();
 
             do {
 
@@ -82,6 +82,37 @@ public class UserDatabaseManager {
 
                 User user = new User();
                 populateUser(user, resultSet, connectionManager);
+                return user;
+            }
+
+        } finally {
+            connectionManager.commit();
+        }
+
+        return null;
+    }
+
+    public static User selectUserByActivationCode(String email, ConnectionManager connectionManager) throws SQLException, Exception {
+        logger.debug("selectUserByActivationCode("+email+", "+connectionManager+")");
+
+        try {
+
+            PreparedStatement preparedStatement = connectionManager.loadStatement("selectUserByActivationCode");
+            preparedStatement.setString(1, email);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if(resultSet.next()) {
+
+                User user = new User();
+
+                //populateUser(user, resultSet, connectionManager);
+                user.setId            (resultSet.getInt   (1));
+                user.setName          (resultSet.getString(2));
+                user.setEmail         (resultSet.getString(3));
+
+                selectGroupIdsByUserId(user, connectionManager);
+
                 return user;
             }
 

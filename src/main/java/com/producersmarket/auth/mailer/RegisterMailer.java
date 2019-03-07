@@ -28,7 +28,6 @@ import com.javapoets.mail.server.smtp.SmtpMessage;
 //import com.javapoets.mail.model.MailMessage;
 
 import com.producersmarket.auth.util.SecurityUtil;
-import com.producersmarket.auth.database.RegisterDatabaseManager;
 import com.producersmarket.auth.util.UniqueId;
 
 public class RegisterMailer implements Runnable {
@@ -60,10 +59,10 @@ public class RegisterMailer implements Runnable {
     private String activationCode = null;
     private String contextUrl = null;
     private Properties properties = null;
+    private PreparedEmail preparedEmail = null;
     //private MailClient mailClient;
     private SmtpClient mailClient;
-    //private ConnectionPool connectionPool;
-    private ConnectionManager connectionManager;
+    private String accountActivationLink = null;
 
     public RegisterMailer(String emailAddress) {
         logger.debug("("+emailAddress+")");
@@ -95,6 +94,7 @@ public class RegisterMailer implements Runnable {
         this.fromAddress = properties.getProperty(EMAIL_FROM);
         this.toAddress   = properties.getProperty(EMAIL_TO);
         this.contextUrl  = properties.getProperty(CONTEXT_URL);
+        this.accountActivationLink = properties.getProperty("accountActivationLink");
 
         String name = properties.getProperty("name");
         String subject = properties.getProperty("subject");
@@ -104,11 +104,11 @@ public class RegisterMailer implements Runnable {
         logger.debug("to = '"+this.toAddress+"', fromAddress = '"+fromAddress+"'");
     }
 
-    /*
-    public RegisterMailer(Properties properties, Object connectionPoolObject) {
-        logger.debug("("+properties+", connectionPoolObject)");
+    public RegisterMailer(Properties properties, PreparedEmail preparedEmail) {
+        logger.debug("("+properties+", preparedEmail)");
 
         this.properties = properties;
+        this.preparedEmail = preparedEmail;
 
         this.smtpServer  = properties.getProperty(SMTP_SERVER);
         this.smtpPort    = properties.getProperty(SMTP_PORT);
@@ -117,32 +117,7 @@ public class RegisterMailer implements Runnable {
         this.fromAddress = properties.getProperty(EMAIL_FROM);
         this.toAddress   = properties.getProperty(EMAIL_TO);
         this.contextUrl  = properties.getProperty(CONTEXT_URL);
-
-        //this.connectionPool = (ConnectionPool)connectionPoolObject;
-        this.connectionManager = new ConnectionManager( (ConnectionPool) connectionPoolObject );
-
-        String name = properties.getProperty("name");
-        String subject = properties.getProperty("subject");
-
-        logger.debug("this.smtpServer = '"+this.smtpServer+"', this.smtpPort = '"+this.smtpPort+"'");
-
-        logger.debug("to = '"+this.toAddress+"', fromAddress = '"+fromAddress+"'");
-    }
-    */
-
-    public RegisterMailer(Properties properties, ConnectionManager connectionManager) {
-        logger.debug("("+properties+", connectionManager)");
-
-        this.properties = properties;
-        this.connectionManager = connectionManager;
-
-        this.smtpServer  = properties.getProperty(SMTP_SERVER);
-        this.smtpPort    = properties.getProperty(SMTP_PORT);
-        this.smtpUser    = properties.getProperty(SMTP_USER);
-        this.smtpPass    = properties.getProperty(SMTP_PASS);
-        this.fromAddress = properties.getProperty(EMAIL_FROM);
-        this.toAddress   = properties.getProperty(EMAIL_TO);
-        this.contextUrl  = properties.getProperty(CONTEXT_URL);
+        this.accountActivationLink = properties.getProperty("accountActivationLink");
 
         String name = properties.getProperty("name");
         String subject = properties.getProperty("subject");
@@ -152,210 +127,140 @@ public class RegisterMailer implements Runnable {
         logger.debug("to = '"+this.toAddress+"', fromAddress = '"+fromAddress+"'");
     }
 
-    /*
-    public void insertActivationCode() throws MessagingException, Exception {
-        logger.debug("insertActivationCode()");
-
-        // generate the password reset code
-        String uniqueId = com.ispaces.util.UniqueId.getUniqueId();
-        String millis = String.valueOf(System.currentTimeMillis());
-        this.activationCode = SecurityUtil.makeAuthToken(millis, uniqueId);
-        logger.debug("this.activationCode = "+this.activationCode);
-
-        try {
-
-            //RegistrationManager.insertActivationCode(this.user.getId(), this.activationCode);
-            RegisterDatabaseManager.insertActivationCode(this.toAddress, this.activationCode);
-
-            mailClient = new MailClient();
-            mailClient.setSmtpServer(smtpServer);
-            mailClient.setSmtpPort(smtpPort);
-
-        //} catch(java.sql.SQLException e) {
-        //    e.printStackTrace();
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-    */
-
-    //public String sendEmail() throws MessagingException {
-    public String sendEmail() {
+    public void sendEmail() {
         logger.debug("sendEmail()");
 
-        String uniqueId = UniqueId.getUniqueId();
-        String millis = String.valueOf(System.currentTimeMillis());
-        String activationCode = this.activationCode = SecurityUtil.makeAuthToken(millis, uniqueId);
-
-        logger.debug("activationCode = "+activationCode);
-
-        String resetLink = new StringBuilder()
-          .append(this.contextUrl)
-          .append("/confirm-email/")
-          .append(activationCode)
-          .toString()
-        ;
-
         try {
 
-            //RegistrationManager.insertActivationCode(this.user.getId(), this.activationCode);
-            //RegisterDatabaseManager.insertActivationCode(this.toAddress, activationCode);
-            //RegisterDatabaseManager.insertActivationCode(this.toAddress, activationCode, this.connectionPool);
-            RegisterDatabaseManager.insertActivationCode(this.toAddress, activationCode, this.connectionManager);
+            Hashtable<String, String> emailParams  = new Hashtable<String, String>();
+            emailParams.put("LINK", this.accountActivationLink);
+
+            this.subject = this.preparedEmail.getSubject();
+            this.body = this.preparedEmail.getBody();
+
+            logger.debug("this.subject = "+this.subject);
+            logger.debug("this.body = "+this.body);
+
+            String bodyHtmlTemplate = HttpUtil.getRequestString(new StringBuilder()
+                .append(contextUrl)
+                .append("/view/email/confirm-your-email.jsp")
+                .toString());   
+
+            logger.debug("bodyHtmlTemplate.length() = "+bodyHtmlTemplate.length());
+            preparedEmail.setBody(bodyHtmlTemplate);
+
+            this.bodyHtml = preparedEmail.generateBody(emailParams);
+            logger.debug("this.bodyHtml.length() = "+this.bodyHtml.length());
+
+            // Create the MailMessage object
+            //MailMessage mailMessage = new MailMessage();
+            SmtpMessage mailMessage = new SmtpMessage();
+            //MailMessage mailMessage = new SmtpMessage();
+            logger.debug("mailMessage = "+mailMessage);
 
             //try {
 
+                mailMessage.setFrom(this.fromAddress);
 
-                Hashtable<String, String> emailParams  = new Hashtable<String, String>();
-                //emailParams.put("SUPPORTEMAIL", this.fromAddress);
-                //emailParams.put("NAME", user.getName());
-                //emailParams.put("USERNAME", user.getUsername());
-                emailParams.put("LINK", resetLink);
-                //emailParams.put("URL",         InitServlet.init.getProperty("wwwUrl"));
+            /*
+            } catch(javax.mail.internet.AddressException e) {
 
-                String messageName = "confirm-email";
-                PreparedEmail preparedEmail = null;
-                try {
+                logger.error(e.getMessage());
+                
+                StringWriter stringWriter = new StringWriter();
+                PrintWriter printWriter = new PrintWriter(stringWriter);
+                e.printStackTrace(printWriter);
+                logger.error(stringWriter.toString());
 
-                    preparedEmail = PreparedEmails.getPreparedEmail(messageName, this.connectionManager);
+                throw e;
+            }
+            */
 
-                } catch(Exception e) {
+            //try {
 
-                    logger.error("Unable to create the PreparedEmail "+messageName);
-                    e.printStackTrace();
-                }
+                mailMessage.setTo(this.toAddress);
 
-                this.subject = preparedEmail.getSubject();
-                this.body = preparedEmail.getBody();
+            /*
+            } catch(javax.mail.internet.AddressException e) {
 
-                logger.debug("this.subject = "+this.subject);
-                logger.debug("this.body = "+this.body);
+                StringWriter stringWriter = new StringWriter();
+                PrintWriter printWriter = new PrintWriter(stringWriter);
+                e.printStackTrace(printWriter);
+                logger.error(stringWriter.toString());
 
-                String bodyHtmlTemplate = HttpUtil.getRequestString(new StringBuilder()
-                    .append(contextUrl)
-                    .append("/view/email/confirm-your-email.jsp")
-                    .toString());   
+                throw e;
+            }
+            */
 
-                logger.debug("bodyHtmlTemplate.length() = "+bodyHtmlTemplate.length());
-                preparedEmail.setBody(bodyHtmlTemplate);
+            //mailMessage.setContentType("text/plain");
+            mailMessage.setContentType("text/html");
+            //mailMessage.setContentType("multipart/alternative");
+            mailMessage.setSubject(this.subject);
+            //mailMessage.setBody(this.body);
+            mailMessage.setBody(this.bodyHtml);
 
-                this.bodyHtml = preparedEmail.generateBody(emailParams);
+
+            /*
+            MailMessage htmlBodyPart = new MailMessage();
+            htmlBodyPart.setBody(this.bodyHtml);
+            htmlBodyPart.setContentType("text/html");
+
+            mailMessage.addBodyPart(htmlBodyPart);
+            */
+
+
+            /*
+            MailMessage mb1 = new MailMessage();
+            //SmtpMessage mb1 = new SmtpMessage();
+
+            try {
+                //mb1.setBody(baos.toByteArray());
+                logger.debug("this.body.length() = "+this.body.length());
+                mb1.setBody(this.body);
+                mb1.setContentType("text/plain");
+                mailMessage.addBodyPart(mb1);
+            }catch(Exception e){
+                e.printStackTrace(System.err);
+            }
+
+            MailMessage mb2 = new MailMessage();
+            //SmtpMessage mb2 = new SmtpMessage();
+
+            try {
+                //mb2.setBody(baos.toByteArray());
+                
                 logger.debug("this.bodyHtml.length() = "+this.bodyHtml.length());
 
-                // Create the MailMessage object
-                //MailMessage mailMessage = new MailMessage();
-                SmtpMessage mailMessage = new SmtpMessage();
-                //MailMessage mailMessage = new SmtpMessage();
-                logger.debug("mailMessage = "+mailMessage);
+                mb2.setBody(this.bodyHtml);
+                mb2.setContentType("text/html");
+                mailMessage.addBodyPart(mb2);
 
-                //try {
+            } catch(Exception e) {
+                e.printStackTrace(System.err);
+            }
+            */
 
-                    mailMessage.setFrom(this.fromAddress);
+            //mailMessage.setBcc("dermot@producersmarket.com");
 
-                /*
-                } catch(javax.mail.internet.AddressException e) {
+            //mailClient = new MailClient();
+            mailClient = new SmtpClient(mailMessage);
+            mailClient.setSmtpServer(this.smtpServer);
+            mailClient.setSmtpPort(this.smtpPort);
+            mailClient.setSmtpUsername(this.smtpUser);
+            mailClient.setSmtpPassword(this.smtpPass);
 
-                    logger.error(e.getMessage());
-                    
-                    StringWriter stringWriter = new StringWriter();
-                    PrintWriter printWriter = new PrintWriter(stringWriter);
-                    e.printStackTrace(printWriter);
-                    logger.error(stringWriter.toString());
+            try {
 
-                    throw e;
-                }
-                */
+                //mailClient.sendMessage(mailMessage);
+                mailClient.send();
 
-                //try {
+            } catch(MessagingException me) {
+                StringWriter stringWriter = new StringWriter();
+                PrintWriter printWriter = new PrintWriter(stringWriter);
+                me.printStackTrace(printWriter);
+                logger.debug(stringWriter.toString());
+            }
 
-                    mailMessage.setTo(this.toAddress);
-
-                /*
-                } catch(javax.mail.internet.AddressException e) {
-
-                    StringWriter stringWriter = new StringWriter();
-                    PrintWriter printWriter = new PrintWriter(stringWriter);
-                    e.printStackTrace(printWriter);
-                    logger.error(stringWriter.toString());
-
-                    throw e;
-                }
-                */
-
-                //mailMessage.setContentType("text/plain");
-                mailMessage.setContentType("text/html");
-                //mailMessage.setContentType("multipart/alternative");
-                mailMessage.setSubject(this.subject);
-                //mailMessage.setBody(this.body);
-                mailMessage.setBody(this.bodyHtml);
-
-
-                /*
-                MailMessage htmlBodyPart = new MailMessage();
-                htmlBodyPart.setBody(this.bodyHtml);
-                htmlBodyPart.setContentType("text/html");
-
-                mailMessage.addBodyPart(htmlBodyPart);
-                */
-
-
-                /*
-                MailMessage mb1 = new MailMessage();
-                //SmtpMessage mb1 = new SmtpMessage();
-
-                try {
-                    //mb1.setBody(baos.toByteArray());
-                    logger.debug("this.body.length() = "+this.body.length());
-                    mb1.setBody(this.body);
-                    mb1.setContentType("text/plain");
-                    mailMessage.addBodyPart(mb1);
-                }catch(Exception e){
-                    e.printStackTrace(System.err);
-                }
-
-                MailMessage mb2 = new MailMessage();
-                //SmtpMessage mb2 = new SmtpMessage();
-
-                try {
-                    //mb2.setBody(baos.toByteArray());
-                    
-                    logger.debug("this.bodyHtml.length() = "+this.bodyHtml.length());
-
-                    mb2.setBody(this.bodyHtml);
-                    mb2.setContentType("text/html");
-                    mailMessage.addBodyPart(mb2);
-
-                } catch(Exception e) {
-                    e.printStackTrace(System.err);
-                }
-                */
-
-                //mailMessage.setBcc("dermot@producersmarket.com");
-
-                //mailClient = new MailClient();
-                mailClient = new SmtpClient(mailMessage);
-                mailClient.setSmtpServer(this.smtpServer);
-                mailClient.setSmtpPort(this.smtpPort);
-                mailClient.setSmtpUsername(this.smtpUser);
-                mailClient.setSmtpPassword(this.smtpPass);
-
-                try {
-
-                    //mailClient.sendMessage(mailMessage);
-                    mailClient.send();
-
-                } catch(MessagingException me) {
-                    StringWriter stringWriter = new StringWriter();
-                    PrintWriter printWriter = new PrintWriter(stringWriter);
-                    me.printStackTrace(printWriter);
-                    logger.debug(stringWriter.toString());
-                }
-
-                return resetLink;
-            //} catch(Exception e) {
-                //e.printStackTrace();
-            //}
 
         } catch(Exception e) {
             
@@ -364,10 +269,8 @@ public class RegisterMailer implements Runnable {
             e.printStackTrace(printWriter);
             logger.debug(stringWriter.toString());
 
-            return resetLink;
         }
 
-        //return null;
     }
 
     /**
@@ -399,33 +302,14 @@ public class RegisterMailer implements Runnable {
 
     }
 
-    public static String send(Properties properties) throws MessagingException {
-        logger.debug("send("+properties+")");
+    public static void send(Properties properties, PreparedEmail preparedEmail) throws MessagingException {
+        logger.debug("send("+properties+", preparedEmail)");
 
-        RegisterMailer registerMailer = new RegisterMailer(properties);
+        RegisterMailer registerMailer = new RegisterMailer(properties, preparedEmail);
 
-        return registerMailer.sendEmail();
+        registerMailer.sendEmail();
     }
 
-    /*
-    public static String send(Properties properties, Object connectionPoolObject) throws MessagingException {
-        logger.debug("send("+properties+", connectionPoolObject)");
-
-        RegisterMailer registerMailer = new RegisterMailer(properties, connectionPoolObject);
-        
-        return registerMailer.sendEmail();
-    }
-    */
-
-    public static String send(Properties properties, ConnectionManager connectionManager) throws MessagingException {
-        logger.debug("send("+properties+", connectionManager)");
-
-        RegisterMailer registerMailer = new RegisterMailer(properties, connectionManager);
-        
-        return registerMailer.sendEmail();
-    }
-
-    //public static void send(Properties properties, boolean differentThread) throws MessagingException {
     public static void send(Properties properties, boolean differentThread) {
         logger.debug("send("+properties+", differentThread:"+(differentThread)+")");
 

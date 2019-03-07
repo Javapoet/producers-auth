@@ -240,7 +240,7 @@ public class LoginServlet extends ParentServlet {
                     java.util.List<Integer> groupIdList = user.getGroupIdList();
                     if(groupIdList != null) {
                         //log.debug("httpSession.setAttribute('groups', "+groupIdList+")");
-                        httpSession.setAttribute("groups", groupIdList); // set the user groups on the session
+                        httpSession.setAttribute("groupIdList", groupIdList); // set the user groups on the session
                     }
 
                     String serverInfo = getServletContext().getServerInfo();
@@ -325,8 +325,8 @@ public class LoginServlet extends ParentServlet {
             } else { // if(passwordHash != null
 
                 //request.setAttribute("errorMessage", "Incorrect password");
-                //request.setAttribute("passwordError", "Incorrect password, try again");
-                request.setAttribute("usernameError", "No account with that email address exists");
+                request.setAttribute("passwordError", "Incorrect password");
+                //request.setAttribute("usernameError", "No account with that email address exists");
                 includeUtf8(request, response, this.loginPage);
 
                 return;
