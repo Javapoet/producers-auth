@@ -139,6 +139,14 @@ public class LoginServlet extends ParentServlet {
 
         try {
 
+            String username = null;
+            String pathInfo = request.getPathInfo();
+            if(pathInfo != null) username = pathInfo.substring(1, pathInfo.length());
+
+            logger.debug("username = "+username);
+
+            request.setAttribute("username", username);
+
             //includeUtf8(request, response, this.loginPage);
             includeUtf8(request, response, loginPage);
 
@@ -158,6 +166,17 @@ public class LoginServlet extends ParentServlet {
         String password = request.getParameter("hash");
         String recaptchaResponse = request.getParameter("g-recaptcha-response");
         //String secretKey = "6Ld5B40UAAAAAJ6MEjJiYZQiTlCuBvJSduqcnfzO";
+
+        boolean isRememberMe = false;
+        String rememberMe = request.getParameter("rememberMe");
+        if(rememberMe != null) {
+            try {
+                isRememberMe = new Boolean(rememberMe).booleanValue();
+            } catch(Exception e) {}  // Ignore exception... remember me is not checked.
+        }
+        logger.debug("isRememberMe = "+(isRememberMe));
+        //user.setRememberMe(isRememberMe);
+
             
         //logger.debug("remoteAddr = "+remoteAddr);
         logger.debug("email = "+email);

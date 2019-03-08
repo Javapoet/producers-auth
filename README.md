@@ -18,3 +18,5 @@
 0.0.0 build 25 Added `httpSession.setAttribute("userId", userId)` to `ConfirmEmailServlet`
 0.0.0 build 26 Added `UserDatabaseManager` and `groupIdList`
 0.0.0 build 27 Removed database access dependency from `RegisterMailer`
+0.0.0 build 28 Added email capture from login form to forgot password
+0.0.0 build 29 Capturing user/email when click log in from register page

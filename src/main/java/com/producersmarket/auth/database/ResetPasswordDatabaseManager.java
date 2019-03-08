@@ -90,9 +90,6 @@ public class ResetPasswordDatabaseManager {
 
         try {
 
-            //PreparedStatement preparedStatement = connectionManager.loadStatement(selectUserIdByPasswordResetCode);
-            //String sql = "SELECT id FROM user WHERE activationcode = ?";
-            //PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
             PreparedStatement preparedStatement = connectionManager.loadStatement("selectUserIdByPasswordResetCode");
             preparedStatement.setString(1, code);
 
@@ -142,7 +139,7 @@ public class ResetPasswordDatabaseManager {
 
             //String sql = "UPDATE user SET activation_code=? WHERE email=?";
             //PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
-            PreparedStatement preparedStatement = connectionManager.loadStatement("insertActivationCode");
+            PreparedStatement preparedStatement = connectionManager.loadStatement("insertActivationCodeByEmail");
             preparedStatement.setString(1, code);
             preparedStatement.setString(2, email);
             preparedStatement.executeUpdate();
@@ -167,7 +164,7 @@ public class ResetPasswordDatabaseManager {
 
             //String sql = "UPDATE user SET activation_code=? WHERE email=?";
             //PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
-            PreparedStatement preparedStatement = connectionManager.loadStatement("insertActivationCode");
+            PreparedStatement preparedStatement = connectionManager.loadStatement("insertActivationCodeByEmail");
             preparedStatement.setString(1, code);
             preparedStatement.setString(2, email);
             preparedStatement.executeUpdate();

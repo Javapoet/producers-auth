@@ -48,6 +48,14 @@ public class ResetPasswordServlet extends ParentServlet {
 
         try {
 
+            String username = null;
+            String pathInfo = request.getPathInfo();
+            if(pathInfo != null) username = pathInfo.substring(1, pathInfo.length());
+
+            logger.debug("username = "+username);
+
+            request.setAttribute("email", username);
+
             includeUtf8(request, response, "/view/reset-password.jsp");
 
         } catch(java.io.FileNotFoundException e) {
@@ -83,10 +91,11 @@ public class ResetPasswordServlet extends ParentServlet {
             //int userId = ResetPasswordDatabaseManager.selectUserIdByEmail(email);
             int userId = LoginDatabaseManager.selectUserIdByEmail(email, getConnectionManager());
 
+            logger.debug("userId = "+userId);
+
             //if(user != null) {
             if(userId != -1) {
 
-                logger.debug("userId = "+userId);
                 //logger.debug("user.getId() = "+user.getId());
                 //logger.debug("user.getEmail() = "+user.getEmail());
 
@@ -141,6 +150,17 @@ public class ResetPasswordServlet extends ParentServlet {
                     exception.printStackTrace(printWriter);
                     logger.error(stringWriter.toString());
                 }
+
+            } else { // if(passwordHash != null
+
+                //request.setAttribute("errorMessage", "Incorrect password");
+                //request.setAttribute("passwordError", "Incorrect password");
+                request.setAttribute("usernameError", "Username does not exists");
+                request.setAttribute("emailError", "Email address does not exists");
+                //includeUtf8(request, response, this.loginPage);
+                includeUtf8(request, response, "/view/reset-password.jsp");
+
+                return;
 
             }
 

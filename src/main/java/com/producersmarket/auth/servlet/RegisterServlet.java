@@ -41,6 +41,15 @@ public class RegisterServlet
 
         try
         {
+
+            String username = null;
+            String pathInfo = request.getPathInfo();
+            if(pathInfo != null) username = pathInfo.substring(1, pathInfo.length());
+
+            logger.debug("username = "+username);
+
+            request.setAttribute("email", username);
+
             includeUtf8(request, response, this.registerPage);
       
             return;

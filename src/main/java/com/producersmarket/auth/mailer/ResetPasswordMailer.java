@@ -157,7 +157,8 @@ public class ResetPasswordMailer
         try {
 
             //RegistrationManager.insertActivationCode(this.user.getId(), this.activationCode);
-            ResetPasswordDatabaseManager.insertActivationCode(this.toAddress, this.activationCode);
+            //ResetPasswordDatabaseManager.insertActivationCode(this.toAddress, this.activationCode);
+            ResetPasswordDatabaseManager.insertActivationCode(this.toAddress, this.activationCode, this.connectionManager);
 
             String resetLink = new StringBuilder()
               .append(this.contextUrl)
@@ -178,7 +179,7 @@ public class ResetPasswordMailer
 
             try {
 
-                preparedEmail = PreparedEmails.getPreparedEmail(messageName);
+                preparedEmail = PreparedEmails.getPreparedEmail(messageName, this.connectionManager);
 
             } catch(Exception e) {
                 logger.error("Unable top create the PreparedEmail. "+messageName);

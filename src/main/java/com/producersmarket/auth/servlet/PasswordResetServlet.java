@@ -64,7 +64,7 @@ public class PasswordResetServlet extends ParentServlet {
             //logger.debug("doGet(request, response): code = '"+code+QUOTE);
 
             //User user = UserDatabaseManager.selectUserByPasswordResetCode(code);
-            int userId = ResetPasswordDatabaseManager.selectUserIdByPasswordResetCode(code);
+            int userId = ResetPasswordDatabaseManager.selectUserIdByPasswordResetCode(code, getConnectionManager());
             logger.debug("userId = "+userId);
 
             //if(user != null) {
