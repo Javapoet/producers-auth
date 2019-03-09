@@ -335,7 +335,16 @@ public class LoginServlet extends ParentServlet {
                     //response.sendRedirect(backendUrl + "/store");
                     */
 
-                    includeUtf8(request, response, this.loggedInPage);
+                    String redirect = request.getParameter("redirect");
+                    logger.debug("redirect = "+redirect);
+                    if(redirect != null) {
+                        
+                        //response.sendRedirect(redirect);
+                        includeUtf8(request, response, redirect);
+
+                    } else {
+                        includeUtf8(request, response, this.loggedInPage);
+                    }
 
                     return;
                     
