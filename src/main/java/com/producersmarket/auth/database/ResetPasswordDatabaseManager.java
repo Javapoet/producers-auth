@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
 import com.ispaces.dbcp.ConnectionManager;
+import com.ispaces.dbcp.ConnectionPool;
 
 public class ResetPasswordDatabaseManager {
 
@@ -23,6 +24,20 @@ public class ResetPasswordDatabaseManager {
     private static final String DELETE_FORGOT_PASSWORD = "deleteForgotPassword";
     private static final String UPDATE_PASSWORD_HASH = "updatePasswordHash";
     private static final String selectUserIdByPasswordResetCode = "selectUserIdByPasswordResetCode";
+
+    public static void updatePassword(int userId, String password, Object connectionPoolObject) throws SQLException, Exception {
+        logger.debug("updatePassword("+userId+", password, "+connectionPoolObject+")");
+
+        updatePassword(userId, password, (ConnectionPool) connectionPoolObject);
+    }
+
+    public static void updatePassword(int userId, String password, ConnectionPool connectionPool) throws SQLException, Exception {
+        logger.debug("updatePassword("+userId+", password, "+connectionPool+")");
+
+        ConnectionManager connectionManager = new ConnectionManager(connectionPool);
+
+        updatePassword(userId, password, connectionManager);
+    }
 
     public static void updatePassword(int userId, String password, ConnectionManager connectionManager) throws SQLException, Exception {
         logger.debug("updatePassword("+userId+", password, connectionManager)");
@@ -85,6 +100,18 @@ public class ResetPasswordDatabaseManager {
         return -1;
     }
 
+    public static int selectUserIdByPasswordResetCode(String code, Object connectionPoolObject) throws SQLException, Exception {
+        logger.debug("selectUserIdByPasswordResetCode("+code+", "+connectionPoolObject+")");
+
+        return selectUserIdByPasswordResetCode(code, (ConnectionPool) connectionPoolObject);
+    }
+
+    public static int selectUserIdByPasswordResetCode(String code, ConnectionPool connectionPool) throws SQLException, Exception {
+        logger.debug("selectUserIdByPasswordResetCode("+code+", connectionPool)");
+
+        return selectUserIdByPasswordResetCode(code, new ConnectionManager(connectionPool));
+    }
+
     public static int selectUserIdByPasswordResetCode(String code, ConnectionManager connectionManager) throws SQLException, Exception {
         logger.debug("selectUserIdByPasswordResetCode("+code+", connectionManager)");
 
@@ -130,6 +157,18 @@ public class ResetPasswordDatabaseManager {
             connectionManager.commit();
         }
 
+    }
+
+    public static void insertActivationCode(String email, String code, Object connectionPoolObject) throws SQLException, Exception {
+        logger.debug("insertActivationCode("+email+", "+code+", connectionPoolObject)");
+
+        insertActivationCode(email, code, (ConnectionPool) connectionPoolObject);
+    }
+
+    public static void insertActivationCode(String email, String code, ConnectionPool connectionPool) throws SQLException, Exception {
+        logger.debug("insertActivationCode("+email+", "+code+", connectionPool)");
+
+        insertActivationCode(email, code, new ConnectionManager(connectionPool));
     }
 
     public static void insertActivationCode(String email, String code, ConnectionManager connectionManager) throws SQLException, Exception {
@@ -178,6 +217,18 @@ public class ResetPasswordDatabaseManager {
             connectionManager.commit();
         }
 
+    }
+
+    public static void deleteActivationCode(int userId, Object connectionPoolObject) throws SQLException, Exception {
+        logger.debug("deleteActivationCode("+userId+", connectionPoolObject)");
+
+        deleteActivationCode(userId, (ConnectionPool) connectionPoolObject);
+    }
+
+    public static void deleteActivationCode(int userId, ConnectionPool connectionPool) throws SQLException, Exception {
+        logger.debug("deleteActivationCode("+userId+", connectionPool)");
+
+        deleteActivationCode(userId, new ConnectionManager(connectionPool));
     }
 
     public static void deleteActivationCode(int userId, ConnectionManager connectionManager) throws SQLException, Exception {

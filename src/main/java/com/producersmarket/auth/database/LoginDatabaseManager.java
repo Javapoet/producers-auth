@@ -62,9 +62,6 @@ public class LoginDatabaseManager {
     public static int selectUserIdByEmail(String email, ConnectionPool connectionPool) throws SQLException, Exception {
         logger.debug("selectUserIdByEmail("+email+", ConnectionPool: "+connectionPool+")");
 
-        //ConnectionManager connectionManager = new ConnectionManager(className, com.producersmarket.servlet.InitServlet.connectionPool);
-        //ConnectionManager connectionManager = new ConnectionManager();
-        //ConnectionManager connectionManager = new ConnectionManager(className);
         ConnectionManager connectionManager = new ConnectionManager(connectionPool);
 
         return selectUserIdByEmail(email, connectionManager);

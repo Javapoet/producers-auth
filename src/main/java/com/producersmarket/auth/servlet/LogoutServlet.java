@@ -21,6 +21,7 @@ public class LogoutServlet extends ParentServlet {
 
         try {
 
+            /*
             HttpSession httpSession = request.getSession(false);
 
             if(httpSession != null) {
@@ -33,27 +34,27 @@ public class LogoutServlet extends ParentServlet {
 
                 httpSession.removeAttribute("userId");
 
-                /*
-                if(userId != null) {
-                    try {
-                        com.ispaces.manager.UserManager.updateUserLogout(userId.intValue());
-                    } catch(Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+                //if(userId != null) {
+                //    try {
+                //        com.ispaces.manager.UserManager.updateUserLogout(userId.intValue());
+                //    } catch(Exception e) {
+                //        e.printStackTrace();
+                //    }
+                //}
 
-                if(sessionId != null) {
-                    try {
-                        SessionManager.updateSessionDestroyed(sessionId);
-                    } catch(Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                */
+                //if(sessionId != null) {
+                //    try {
+                //        SessionManager.updateSessionDestroyed(sessionId);
+                //    } catch(Exception e) {
+                //        e.printStackTrace();
+                //    }
+                //}
 
                 httpSession.invalidate();
 
             } // if(httpSession != null)
+            */
+            super.logoutUser(request, response);
 
             ServletContext servletContext = getServletContext();
             logger.debug("servletContext = "+servletContext);

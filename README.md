@@ -21,3 +21,4 @@
 0.0.0 build 28 Added email capture from login form to forgot password
 0.0.0 build 29 Capturing user/email when click log in from register page
 0.0.0 build 30 Passing ConnectionManager to ResetPasswordDatabaseManager
+0.0.0 build 31 Added logoutUser

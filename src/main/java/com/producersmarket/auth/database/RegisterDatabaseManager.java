@@ -67,7 +67,6 @@ public class RegisterDatabaseManager {
         return -1;
     }
 
-    /*
     public static void insertActivationCode(int userId, String code, Object connectionPoolObject) throws SQLException, Exception {
         logger.debug("insertActivationCode("+userId+", "+code+", connectionPoolObject)");
         
@@ -79,7 +78,6 @@ public class RegisterDatabaseManager {
 
         insertActivationCode(userId, code, new ConnectionManager(connectionPool));
     }
-    */
 
     public static void insertActivationCode(int userId, String code, ConnectionManager connectionManager) throws SQLException, Exception {
         logger.debug("insertActivationCode("+userId+", "+code+", connectionManager)");
@@ -92,78 +90,6 @@ public class RegisterDatabaseManager {
             //PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
             PreparedStatement preparedStatement = connectionManager.loadStatement(insertActivationCode);
             preparedStatement.setString(1, code);
-            preparedStatement.setInt(2, userId);
-            preparedStatement.executeUpdate();
-
-        } catch(Exception e) {
-            StringWriter stringWriter = new StringWriter();
-            PrintWriter printWriter = new PrintWriter(stringWriter);
-            e.printStackTrace(printWriter);
-            logger.error(stringWriter.toString());
-        } finally {
-            connectionManager.commit();
-        }
-
-    }
-
-    //public static void deleteActivationCode(int userId, String code) throws SQLException, Exception {
-    public static void deleteActivationCode(int userId) throws SQLException, Exception {
-        logger.debug("deleteActivationCode("+userId+")");
-
-        ConnectionManager connectionManager = new ConnectionManager(className, deleteActivationCode);
-
-        try {
-
-            //String sql = "UPDATE user SET activation_code = ? WHERE id = ?";
-            //PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
-            PreparedStatement preparedStatement = connectionManager.loadStatement("deleteActivationCode");
-            preparedStatement.setString(1, null);
-            preparedStatement.setInt(2, userId);
-            preparedStatement.executeUpdate();
-
-        } catch(Exception e) {
-            StringWriter stringWriter = new StringWriter();
-            PrintWriter printWriter = new PrintWriter(stringWriter);
-            e.printStackTrace(printWriter);
-            logger.error(stringWriter.toString());
-        } finally {
-            connectionManager.commit();
-        }
-
-    }
-
-    public static void updateName(int userId, String name) throws SQLException, Exception {
-        logger.debug("updateName("+userId+", "+name+")");
-
-        ConnectionManager connectionManager = new ConnectionManager(className, "updateName");
-
-        try {
-
-            //String sql = "UPDATE user SET name = ? WHERE id = ?";
-            //PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
-            PreparedStatement preparedStatement = connectionManager.loadStatement("updateName");
-            preparedStatement.setString(1, name);
-            preparedStatement.setInt(2, userId);
-            preparedStatement.executeUpdate();
-
-        } catch(Exception e) {
-            StringWriter stringWriter = new StringWriter();
-            PrintWriter printWriter = new PrintWriter(stringWriter);
-            e.printStackTrace(printWriter);
-            logger.error(stringWriter.toString());
-        } finally {
-            connectionManager.commit();
-        }
-
-    }
-
-    public static void updateName(int userId, String name, ConnectionManager connectionManager) throws SQLException, Exception {
-        logger.debug("updateName("+userId+", "+name+", connectionManager)");
-
-        try {
-
-            PreparedStatement preparedStatement = connectionManager.loadStatement("updateName");
-            preparedStatement.setString(1, name);
             preparedStatement.setInt(2, userId);
             preparedStatement.executeUpdate();
 
@@ -229,6 +155,90 @@ public class RegisterDatabaseManager {
             PreparedStatement preparedStatement = connectionManager.loadStatement("updateActivationCode");
             preparedStatement.setString(1, null);
             preparedStatement.setString(2, email);
+            preparedStatement.executeUpdate();
+
+        } catch(Exception e) {
+            StringWriter stringWriter = new StringWriter();
+            PrintWriter printWriter = new PrintWriter(stringWriter);
+            e.printStackTrace(printWriter);
+            logger.error(stringWriter.toString());
+        } finally {
+            connectionManager.commit();
+        }
+
+    }
+
+    //public static void deleteActivationCode(int userId, String code) throws SQLException, Exception {
+    public static void deleteActivationCode(int userId) throws SQLException, Exception {
+        logger.debug("deleteActivationCode("+userId+")");
+
+        ConnectionManager connectionManager = new ConnectionManager(className, deleteActivationCode);
+
+        try {
+
+            //String sql = "UPDATE user SET activation_code = ? WHERE id = ?";
+            //PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
+            PreparedStatement preparedStatement = connectionManager.loadStatement("deleteActivationCode");
+            preparedStatement.setString(1, null);
+            preparedStatement.setInt(2, userId);
+            preparedStatement.executeUpdate();
+
+        } catch(Exception e) {
+            StringWriter stringWriter = new StringWriter();
+            PrintWriter printWriter = new PrintWriter(stringWriter);
+            e.printStackTrace(printWriter);
+            logger.error(stringWriter.toString());
+        } finally {
+            connectionManager.commit();
+        }
+
+    }
+
+    public static void updateName(int userId, String name) throws SQLException, Exception {
+        logger.debug("updateName("+userId+", "+name+")");
+
+        ConnectionManager connectionManager = new ConnectionManager(className, "updateName");
+
+        try {
+
+            //String sql = "UPDATE user SET name = ? WHERE id = ?";
+            //PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
+            PreparedStatement preparedStatement = connectionManager.loadStatement("updateName");
+            preparedStatement.setString(1, name);
+            preparedStatement.setInt(2, userId);
+            preparedStatement.executeUpdate();
+
+        } catch(Exception e) {
+            StringWriter stringWriter = new StringWriter();
+            PrintWriter printWriter = new PrintWriter(stringWriter);
+            e.printStackTrace(printWriter);
+            logger.error(stringWriter.toString());
+        } finally {
+            connectionManager.commit();
+        }
+
+    }
+
+    public static void updateName(int userId, String name, Object connectionPoolObject) throws SQLException, Exception {
+        logger.debug("updateName("+userId+", "+name+", "+connectionPoolObject+")");
+
+        updateName(userId, name, (ConnectionPool) connectionPoolObject);
+    }
+
+    public static void updateName(int userId, String name, ConnectionPool connectionPool) throws SQLException, Exception {
+        logger.debug("updateName("+userId+", "+name+", "+connectionPool+")");
+
+        updateName(userId, name, new ConnectionManager(connectionPool));
+    }
+
+    public static void updateName(int userId, String name, ConnectionManager connectionManager) throws SQLException, Exception {
+        logger.debug("updateName("+userId+", "+name+", connectionManager)");
+
+        try {
+
+            PreparedStatement preparedStatement = connectionManager.loadStatement("updateName");
+            preparedStatement.setString(1, name);
+            preparedStatement.setInt(2, userId);
             preparedStatement.executeUpdate();
 
         } catch(Exception e) {

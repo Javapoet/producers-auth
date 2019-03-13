@@ -238,11 +238,12 @@ public class LoginServlet extends ParentServlet {
                 HttpSession httpSession = request.getSession(true); // create the session
                 logger.debug("httpSession.getId() = "+httpSession.getId());
 
-                //User user = UserDatabaseManager.selectUserByEmail(email);
-                User user = UserDatabaseManager.selectUserByEmail(email, getConnectionManager());
                 //int userId = LoginDatabaseManager.selectUserIdByEmail(email);
                 //int userId = LoginDatabaseManager.selectUserIdByEmail(email, getConnectionPool());
-
+                //User user = UserDatabaseManager.selectUserByEmail(email);
+                //User user = UserDatabaseManager.selectUserByEmail(email, getConnectionManager());
+                User user = UserDatabaseManager.selectUserByEmail(email, getConnectionPool());
+                
                 logger.debug("user = "+user);
 
                 if(user != null) {

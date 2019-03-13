@@ -38,6 +38,18 @@ public class SessionDatabaseManager {
     }
     */
 
+    public static void insert(Session session, Object connectionPoolObject) throws SQLException, Exception {
+        logger.debug("insert("+session+", "+connectionPoolObject+")");
+
+        insert(session, (ConnectionPool) connectionPoolObject);
+    }
+
+    public static void insert(Session session, ConnectionPool connectionPool) throws SQLException, Exception {
+        logger.debug("insert("+session+", "+connectionPool+")");
+
+        insert(session, new ConnectionManager(connectionPool));
+    }
+
     public static void insert(Session session, ConnectionManager connectionManager) throws SQLException, Exception {
         logger.debug("insert("+session+", "+connectionManager+")");
 

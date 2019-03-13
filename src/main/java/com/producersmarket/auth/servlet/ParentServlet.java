@@ -364,4 +364,71 @@ public class ParentServlet extends HttpServlet {
         return -1;
     }
 
+    protected void logoutUser(HttpServletRequest request, HttpServletResponse response) throws java.sql.SQLException, Exception {
+        logger.debug("logoutUser(request, response)");
+
+        HttpSession httpSession = request.getSession(false);
+        logger.debug("httpSession = " + httpSession);
+
+        if(httpSession != null) {
+
+            String sessionId = httpSession.getId();
+            logger.debug("sessionId = " + sessionId);
+
+            Integer userId = (Integer)httpSession.getAttribute("userId");
+            logger.debug("userId = " + userId);
+
+            httpSession.removeAttribute("userId");
+            logger.debug("httpSession.getAttribute(\"userId\") = " + httpSession.getAttribute("userId")); // confirm the userId is gone
+
+            /*
+            if(userId != null) {
+                try {
+                    com.ispaces.manager.UserManager.updateUserLogout(userId.intValue());
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if(sessionId != null) {
+                try {
+                    SessionManager.updateSessionDestroyed(sessionId);
+                } catch(Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            */
+
+            httpSession.invalidate();
+
+            logger.debug("request.getSession(false) = " + request.getSession(false)); // confirm the session is gone
+                
+
+        } // if(httpSession != null)
+
+    }
+
+    /*
+    protected void logoutUserBak(HttpServletRequest request, HttpServletResponse response) throws java.sql.SQLException, Exception {
+        logger.debug("logoutUser(request, response)");
+
+        HttpSession session = SessionListener.getSession(request);
+        User user = (User)session.getAttribute("user");
+
+        user.setLoggedIn(false);
+        Application.log.debug("user.getRememberMe() = "+(user.getRememberMe()));
+
+        user.setRememberMe(false);
+        Application.log.debug("user.getRememberMe() = "+(user.getRememberMe()));
+        
+        UserManager.updateUserLogOut(user);
+
+        // We are no longer invalidating the session, as we are managing the user through the user object.
+        //session.removeAttribute("user");
+        //SessionListener.removeSession(session.getId());
+        //session.invalidate();
+
+    }
+    */
+
 }

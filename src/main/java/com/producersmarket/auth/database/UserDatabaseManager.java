@@ -68,6 +68,18 @@ public class UserDatabaseManager {
         //while(resultSet.next()) groupIdList.add(resultSet.getInt(1));
     }
 
+    public static User selectUserByEmail(String email, Object connectionPoolObject) throws SQLException, Exception {
+        logger.debug("selectUserByEmail("+email+", "+connectionPoolObject+")");
+
+        return selectUserByEmail(email, (ConnectionPool) connectionPoolObject);
+    }
+
+    public static User selectUserByEmail(String email, ConnectionPool connectionPool) throws SQLException, Exception {
+        logger.debug("selectUserByEmail("+email+", "+connectionPool+")");
+
+        return selectUserByEmail(email, new ConnectionManager(connectionPool));
+    }
+
     public static User selectUserByEmail(String email, ConnectionManager connectionManager) throws SQLException, Exception {
         logger.debug("selectUserByEmail("+email+", "+connectionManager+")");
 
@@ -90,6 +102,18 @@ public class UserDatabaseManager {
         }
 
         return null;
+    }
+
+    public static User selectUserByActivationCode(String email, Object connectionPoolObject) throws SQLException, Exception {
+        logger.debug("selectUserByActivationCode("+email+", "+connectionPoolObject+")");
+
+        return selectUserByActivationCode(email, (ConnectionPool) connectionPoolObject);
+    }
+
+    public static User selectUserByActivationCode(String email, ConnectionPool connectionPool) throws SQLException, Exception {
+        logger.debug("selectUserByActivationCode("+email+", "+connectionPool+")");
+
+        return selectUserByActivationCode(email, new ConnectionManager(connectionPool));
     }
 
     public static User selectUserByActivationCode(String email, ConnectionManager connectionManager) throws SQLException, Exception {
