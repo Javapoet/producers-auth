@@ -22,3 +22,4 @@
 0.0.0 build 29 Capturing user/email when click log in from register page
 0.0.0 build 30 Passing ConnectionManager to ResetPasswordDatabaseManager
 0.0.0 build 31 Added logoutUser
+0.0.0 build 32 Added dynamic `preparedEmailJspPath` to RegisterMailer

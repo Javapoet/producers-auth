@@ -45,7 +45,9 @@ public class RegisterMailer implements Runnable {
     //private final String EMAIL_ADDRESS_FROM_SUPPORT = "email.address.from.support";
     private final String EMAIL_ADDRESS_FROM_SUPPORT = "emailAddressSupport";
     private final String CONTEXT_URL = "contextUrl";
+    private final String PREPARED_EMAIL_PATH = "view/email/confirm-your-email.jsp"; // default
 
+    private String preparedEmailJspPath = null;
     private String smtpServer = null;
     private String smtpPort = null;
     private String smtpUser = null;
@@ -95,6 +97,8 @@ public class RegisterMailer implements Runnable {
         this.toAddress   = properties.getProperty(EMAIL_TO);
         this.contextUrl  = properties.getProperty(CONTEXT_URL);
         this.accountActivationLink = properties.getProperty("accountActivationLink");
+        this.preparedEmailJspPath = properties.getProperty("preparedEmailJspPath");
+        if(this.preparedEmailJspPath == null) this.preparedEmailJspPath = PREPARED_EMAIL_PATH;
 
         String name = properties.getProperty("name");
         String subject = properties.getProperty("subject");
@@ -118,6 +122,7 @@ public class RegisterMailer implements Runnable {
         this.toAddress   = properties.getProperty(EMAIL_TO);
         this.contextUrl  = properties.getProperty(CONTEXT_URL);
         this.accountActivationLink = properties.getProperty("accountActivationLink");
+        this.preparedEmailJspPath = properties.getProperty("preparedEmailJspPath");
 
         String name = properties.getProperty("name");
         String subject = properties.getProperty("subject");
@@ -143,7 +148,8 @@ public class RegisterMailer implements Runnable {
 
             String bodyHtmlTemplate = HttpUtil.getRequestString(new StringBuilder()
                 .append(contextUrl)
-                .append("/view/email/confirm-your-email.jsp")
+                //.append("view/email/confirm-your-email.jsp")
+                .append(this.preparedEmailJspPath)
                 .toString());   
 
             logger.debug("bodyHtmlTemplate.length() = "+bodyHtmlTemplate.length());
