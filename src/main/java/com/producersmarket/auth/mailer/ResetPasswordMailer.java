@@ -162,7 +162,7 @@ public class ResetPasswordMailer
 
             String resetLink = new StringBuilder()
               .append(this.contextUrl)
-              .append("/password-reset/")
+              .append("password-reset/")
               .append(this.activationCode)
               .toString()
             ;
