@@ -316,8 +316,8 @@ public class LoginServlet extends ParentServlet {
                     SessionDatabaseManager.insertSession(user.getId(), session.getId());
                     */
                     //SessionDatabaseManager.insert(session);
-                    //SessionDatabaseManager.insert(session, getConnectionPool());
-                    SessionDatabaseManager.insert(session, getConnectionManager());
+                    SessionDatabaseManager.insert(session, getConnectionPool());
+                    //SessionDatabaseManager.insert(session, getConnectionManager());
 
                     /*
                     LoginDatabaseManager.updateUserLoggedIn(user.getId(), session.getId());
