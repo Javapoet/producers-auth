@@ -1,15 +1,14 @@
 package com.producersmarket.auth.servlet;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.List;
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.List;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -18,10 +17,10 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 
-import org.json.JSONObject;
-
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+
+import org.json.JSONObject;
 
 import com.producersmarket.auth.database.LoginDatabaseManager;
 import com.producersmarket.auth.database.SessionDatabaseManager;
@@ -184,14 +183,14 @@ public class LoginServlet extends ParentServlet {
 
         if(recaptchaResponse != null) {
 
-            String googleSecretKey = (String) servletContext.setAttribute("googleSecretKey");
-            String googleSiteKey = (String) servletContext.setAttribute("googleSiteKey");
+            String googleSecretKey = (String) getServletContext().getAttribute("googleSecretKey");
+            String googleSiteKey = (String) getServletContext().getAttribute("googleSiteKey");
 
             logger.debug("googleSecretKey = "+googleSecretKey);
             logger.debug("googleSiteKey = "+googleSiteKey);
 
-            //boolean captchaValid = isCaptchaValid(secretKey, recaptchaResponse, remoteAddr);
-            boolean captchaValid = isCaptchaValid(secretKey, recaptchaResponse);
+            //boolean captchaValid = isCaptchaValid(googleSecretKey, recaptchaResponse, remoteAddr);
+            boolean captchaValid = isCaptchaValid(googleSecretKey, recaptchaResponse);
             logger.debug("captchaValid = "+captchaValid);
 
             if(!captchaValid) {
@@ -306,13 +305,9 @@ public class LoginServlet extends ParentServlet {
                     session.setReferer(referer);
                     session.setProtocol(protocol);
 
-                    /*
-                    int sessionId = SessionManager.insert(session);
-                    SessionDatabaseManager.insertSession(user.getId(), session.getId());
-                    */
+                    //SessionDatabaseManager.insertSession(user.getId(), session.getId());
                     //SessionDatabaseManager.insert(session);
                     SessionDatabaseManager.insert(session, getConnectionPool());
-                    //SessionDatabaseManager.insert(session, getConnectionManager());
 
                     /*
                     LoginDatabaseManager.updateUserLoggedIn(user.getId(), session.getId());
