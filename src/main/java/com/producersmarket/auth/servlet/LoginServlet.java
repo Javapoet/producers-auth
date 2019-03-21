@@ -75,6 +75,7 @@ public class LoginServlet extends ParentServlet {
 
         try {
 
+
             String requestUrl = "https://www.google.com/recaptcha/api/siteverify";
 
             String url = new StringBuilder()
@@ -161,11 +162,9 @@ public class LoginServlet extends ParentServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.debug("doPost(request, response)");
 
-        //String remoteAddr = request.getRemoteAddr();
         String email = request.getParameter("username");
         String password = request.getParameter("hash");
         String recaptchaResponse = request.getParameter("g-recaptcha-response");
-        //String secretKey = "6Ld5B40UAAAAAJ6MEjJiYZQiTlCuBvJSduqcnfzO";
 
         boolean isRememberMe = false;
         String rememberMe = request.getParameter("rememberMe");
@@ -182,21 +181,22 @@ public class LoginServlet extends ParentServlet {
         logger.debug("email = "+email);
         logger.debug("password = "+password);
         logger.debug("recaptchaResponse = "+recaptchaResponse);
-        //logger.debug("secretKey = "+secretKey);
 
         if(recaptchaResponse != null) {
+
+            String googleSecretKey = (String) servletContext.setAttribute("googleSecretKey");
+            String googleSiteKey = (String) servletContext.setAttribute("googleSiteKey");
+
+            logger.debug("googleSecretKey = "+googleSecretKey);
+            logger.debug("googleSiteKey = "+googleSiteKey);
 
             //boolean captchaValid = isCaptchaValid(secretKey, recaptchaResponse, remoteAddr);
             boolean captchaValid = isCaptchaValid(secretKey, recaptchaResponse);
             logger.debug("captchaValid = "+captchaValid);
 
             if(!captchaValid) {
-                //request.setAttribute("usernameError", "Please Enter an Email Address");
-                //request.setAttribute("passwordError", "Please Enter an Email Address");
-                //request.setAttribute("errorMessage", "Recaptcha Failure");
-                //request.setAttribute("errorMessage", getServletContext().getAttribute("preparedMessage").getMessage("RecaptchaFailure");
-                //request.setAttribute("errorMessage", getServletContext().getAttribute("preparedMessages").getMessage("recaptcha.not.checked");
-                request.setAttribute("errorMessage", "Check the box to verify you are not a robot");
+
+                request.setAttribute("recaptchaError", "Check the box to verify you are not a robot");
 
                 includeUtf8(request, response, this.loginPage);
 
@@ -219,14 +219,11 @@ public class LoginServlet extends ParentServlet {
             return;
 
         } else {
-            // make sure the email is lowercase
-            email = email.toLowerCase();
+            email = email.toLowerCase();  // make sure the email is lowercase
         }
 
         try {
 
-            //String passwordHash = LoginDatabaseManager.selectPasswordHashByEmail(email);
-            //String passwordHash = LoginDatabaseManager.selectPasswordHashByEmail(email, getServletContext().getAttribute("connectionPool"));
             String passwordHash = LoginDatabaseManager.selectPasswordHashByEmail(email, getConnectionPool());
             logger.debug("passwordHash = "+passwordHash);
 
@@ -241,7 +238,6 @@ public class LoginServlet extends ParentServlet {
                 //int userId = LoginDatabaseManager.selectUserIdByEmail(email);
                 //int userId = LoginDatabaseManager.selectUserIdByEmail(email, getConnectionPool());
                 //User user = UserDatabaseManager.selectUserByEmail(email);
-                //User user = UserDatabaseManager.selectUserByEmail(email, getConnectionManager());
                 User user = UserDatabaseManager.selectUserByEmail(email, getConnectionPool());
                 
                 logger.debug("user = "+user);
@@ -251,15 +247,14 @@ public class LoginServlet extends ParentServlet {
 
                     int userId = user.getId();
                     logger.debug("userId = "+userId);
-
                     //logger.debug("user.getId() = "+user.getId());
+
                     //httpSession.setAttribute("userId", user.getId());
-                    //request.setAttribute("user", user);
                     httpSession.setAttribute("userId", userId); // set the userId on the session
+                    //request.setAttribute("user", user);
 
                     java.util.List<Integer> groupIdList = user.getGroupIdList();
                     if(groupIdList != null) {
-                        //log.debug("httpSession.setAttribute('groups', "+groupIdList+")");
                         httpSession.setAttribute("groupIdList", groupIdList); // set the user groups on the session
                     }
 
