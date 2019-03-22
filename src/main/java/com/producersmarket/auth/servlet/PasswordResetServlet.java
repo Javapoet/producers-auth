@@ -64,7 +64,7 @@ public class PasswordResetServlet extends ParentServlet {
             //logger.debug("doGet(request, response): code = '"+code+QUOTE);
 
             //User user = UserDatabaseManager.selectUserByPasswordResetCode(code);
-            int userId = ResetPasswordDatabaseManager.selectUserIdByPasswordResetCode(code, getConnectionManager());
+            int userId = ResetPasswordDatabaseManager.selectUserIdByPasswordResetCode(code, getConnectionPool());
             logger.debug("userId = "+userId);
 
             //if(user != null) {
@@ -169,7 +169,7 @@ public class PasswordResetServlet extends ParentServlet {
 
                 //User user = UserDatabaseManager.selectUserByPasswordResetCode(code);
                 //int userId = ResetPasswordDatabaseManager.selectUserIdByPasswordResetCode(code);
-                int userId = ResetPasswordDatabaseManager.selectUserIdByPasswordResetCode(code, getConnectionManager());
+                int userId = ResetPasswordDatabaseManager.selectUserIdByPasswordResetCode(code, getConnectionPool());
 
                 //if(user != null) {
                 if(userId != -1) {
@@ -193,7 +193,7 @@ public class PasswordResetServlet extends ParentServlet {
 
                     //ResetPasswordDatabaseManager.updatePassword(user.getId(), hash);
                     //ResetPasswordDatabaseManager.updatePassword(userId, hash);
-                    ResetPasswordDatabaseManager.updatePassword(userId, hash, getConnectionManager());
+                    ResetPasswordDatabaseManager.updatePassword(userId, hash, getConnectionPool());
 
                     //String message = "Your password has been reset.<br/>You can log in below.";
                     String message = "Your password has been reset.<br/>Please log in below.";
@@ -209,7 +209,7 @@ public class PasswordResetServlet extends ParentServlet {
                     //ResetPasswordDatabaseManager.deleteActivationCode(user.getId(), code);  // Delete the reset code after it has been used.
                     //ResetPasswordDatabaseManager.deleteActivationCode(user.getId());  // Delete the reset code after it has been used.
                     //ResetPasswordDatabaseManager.deleteActivationCode(userId);  // Delete the reset code after it has been used.
-                    ResetPasswordDatabaseManager.deleteActivationCode(userId, getConnectionManager());  // Delete the reset code after it has been used.
+                    ResetPasswordDatabaseManager.deleteActivationCode(userId, getConnectionPool());  // Delete the reset code after it has been used.
                 }
 
             } catch(java.sql.SQLException e) {

@@ -89,7 +89,7 @@ public class ResetPasswordServlet extends ParentServlet {
 
             //User user = UserDatabaseManager.selectUserByEmail(email);
             //int userId = ResetPasswordDatabaseManager.selectUserIdByEmail(email);
-            int userId = LoginDatabaseManager.selectUserIdByEmail(email, getConnectionManager());
+            int userId = LoginDatabaseManager.selectUserIdByEmail(email, getConnectionPool());
 
             logger.debug("userId = "+userId);
 
@@ -136,7 +136,9 @@ public class ResetPasswordServlet extends ParentServlet {
                     //ResetPasswordMailer.send(user, true);
                     //ResetPasswordMailer.send(properties, true);
                     //ResetPasswordMailer.send(properties);
-                    ResetPasswordMailer.send(properties, getConnectionManager(), false);
+                    //ResetPasswordMailer.send(properties, getConnectionManager(), false);
+                    //ResetPasswordMailer.send(properties, getConnectionPool(), false);
+                    ResetPasswordMailer.send(properties, new com.ispaces.dbcp.ConnectionManager((com.ispaces.dbcp.ConnectionPool)getConnectionPool()), false);
 
                     request.setAttribute("properties", properties);
 

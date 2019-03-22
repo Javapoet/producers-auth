@@ -53,8 +53,12 @@ public class ResendEmailServlet extends ParentServlet {
             logger.debug("activationCode = "+activationCode);
 
             //User user = UserDatabaseManager.selectUserByPasswordResetCode(code);
-            //int userId = ResetPasswordDatabaseManager.selectUserIdByPasswordResetCode(activationCode, getConnectionManager());
-            User user = UserDatabaseManager.selectUserByActivationCode(activationCode, getConnectionManager());
+            //int userId = ResetPasswordDatabaseManager.selectUserIdByPasswordResetCode(activationCode, getConnectionPool());
+            User user = UserDatabaseManager.selectUserByActivationCode(activationCode, getConnectionPool());
+            //ConnectionPool connectionPool = (ConnectionPool)getConnectionPool();
+            //ConnectionManager connectionManager = new ConnectionManager(connectionPool);
+            //User user = UserDatabaseManager.selectUserByActivationCode(activationCode, connectionManager);
+            //User user = UserDatabaseManager.selectUserByActivationCode(activationCode, new ConnectionManager((ConnectionPool)getConnectionPool()));
 
             if(user != null) {
             //if(userId != -1) {
@@ -110,7 +114,8 @@ public class ResendEmailServlet extends ParentServlet {
 
                 try {
 
-                    PreparedEmail preparedEmail = PreparedEmails.getPreparedEmail("confirm-email", getConnectionManager());
+                    //PreparedEmail preparedEmail = PreparedEmails.getPreparedEmail("confirm-email", getConnectionPool());
+                    PreparedEmail preparedEmail = PreparedEmails.getPreparedEmail("confirm-email", new com.ispaces.dbcp.ConnectionManager((com.ispaces.dbcp.ConnectionPool)getConnectionPool()));
 
                     try {
 
@@ -190,7 +195,7 @@ public class ResendEmailServlet extends ParentServlet {
                     logger.debug("userId = "+userId);
             */                    
 
-                    RegisterDatabaseManager.updateName(userId, name, getConnectionManager());
+                    RegisterDatabaseManager.updateName(userId, name, getConnectionPool());
 
                     //include(request, response, "/view/home.jsp");
                     includeUtf8(request, response, this.confirmEmailPage != null ? this.confirmEmailPage : "/view/confirm-email.jsp");
