@@ -52,12 +52,12 @@ public class LoginServlet extends ParentServlet {
      * Secret key
      * Use this for communication between your site and Google. Be sure to keep it a secret.
      */
-    private String secretKey = "6Ld5B40UAAAAAJ6MEjJiYZQiTlCuBvJSduqcnfzO";
+    //private String secretKey = "6Ld5B40UAAAAAJ6MEjJiYZQiTlCuBvJSduqcnfzO";
 
     /*
      * Site key
      */
-    private String siteKey = "6Ld5B40UAAAAAL65r3R16dgVU467wUHZmEPFDN_I";
+    //private String siteKey = "6Ld5B40UAAAAAL65r3R16dgVU467wUHZmEPFDN_I";
 
     /**
      * Validates Google reCAPTCHA V2 or Invisible reCAPTCHA.

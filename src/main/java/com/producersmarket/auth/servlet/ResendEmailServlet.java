@@ -29,12 +29,15 @@ public class ResendEmailServlet extends ParentServlet {
     private static final Logger logger = LogManager.getLogger();
 
     private String confirmEmailPage = null;
+    private String preparedEmailJspPath = null;
   
     public void init(ServletConfig config)
       throws ServletException
     {
         logger.debug("init(" + config + ")");
     
+        this.preparedEmailJspPath = config.getInitParameter("preparedEmailJspPath");
+
         super.init(config);
     }
 
@@ -102,6 +105,8 @@ public class ResendEmailServlet extends ParentServlet {
                 logger.debug("accountActivationLink = "+accountActivationLink);
                 request.setAttribute("accountActivationLink", accountActivationLink);
                 properties.setProperty("accountActivationLink", accountActivationLink);
+
+                properties.setProperty("preparedEmailJspPath", this.preparedEmailJspPath);
 
                 try {
 
