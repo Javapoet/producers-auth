@@ -70,9 +70,7 @@ public class ConfirmEmailServlet extends ParentServlet {
 
                 httpSession.setAttribute("userId", userId);
 
-                
-
-                ResetPasswordDatabaseManager.deleteActivationCode(userId, getConnectionPool());  // Delete the reset code after it has been used.
+                ResetPasswordDatabaseManager.deleteActivationCode(userId, getConnectionPool());  // delete the reset code after it has been used
                 
                 //include(request, response, "/view/home.jsp", "text/html; charset=UTF-8");
                 //include(request, response, "/view/login.jsp", "text/html; charset=UTF-8");
