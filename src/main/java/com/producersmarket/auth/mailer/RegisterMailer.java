@@ -79,9 +79,11 @@ public class RegisterMailer implements Runnable {
         //if(fromAddress == null) fromAddress = "support@ispaces.com";
         //this.fromAddress = fromAddress;
 
-        logger.debug("this.smtpServer = '"+this.smtpServer+"', this.smtpPort = '"+this.smtpPort+"'");
-
-        logger.debug("to = '"+this.toAddress+"', fromAddress = '"+fromAddress+"'");
+        logger.debug("this.smtpServer = " + this.smtpServer);
+        logger.debug("this.smtpPort = " + this.smtpPort);
+        //logger.debug("this.preparedEmailJspPath = " + this.preparedEmailJspPath);
+        logger.debug("this.toAddress = " + this.toAddress);
+        logger.debug("fromAddress = " + fromAddress);
     }
 
     public RegisterMailer(Properties properties) {
@@ -103,9 +105,11 @@ public class RegisterMailer implements Runnable {
         String name = properties.getProperty("name");
         String subject = properties.getProperty("subject");
 
-        logger.debug("this.smtpServer = '"+this.smtpServer+"', this.smtpPort = '"+this.smtpPort+"'");
-
-        logger.debug("to = '"+this.toAddress+"', fromAddress = '"+fromAddress+"'");
+        logger.debug("this.smtpServer = " + this.smtpServer);
+        logger.debug("this.smtpPort = " + this.smtpPort);
+        logger.debug("this.preparedEmailJspPath = " + this.preparedEmailJspPath);
+        logger.debug("this.toAddress = " + this.toAddress);
+        logger.debug("fromAddress = " + fromAddress);
     }
 
     public RegisterMailer(Properties properties, PreparedEmail preparedEmail) {
@@ -127,9 +131,11 @@ public class RegisterMailer implements Runnable {
         String name = properties.getProperty("name");
         String subject = properties.getProperty("subject");
 
-        logger.debug("this.smtpServer = '"+this.smtpServer+"', this.smtpPort = '"+this.smtpPort+"'");
-
-        logger.debug("to = '"+this.toAddress+"', fromAddress = '"+fromAddress+"'");
+        logger.debug("this.smtpServer = " + this.smtpServer);
+        logger.debug("this.smtpPort = " + this.smtpPort);
+        logger.debug("this.preparedEmailJspPath = " + this.preparedEmailJspPath);
+        logger.debug("this.toAddress = " + this.toAddress);
+        logger.debug("fromAddress = " + fromAddress);
     }
 
     public void sendEmail() {
