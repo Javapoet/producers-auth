@@ -26,3 +26,4 @@
 0.0.0 build 33 Adjust JSP path in ResetPasswordMailer.java for new contextUrl
 0.0.0 build 34 Changed to SessionDatabaseManager.insert(session, getConnectionPool())
 0.0.0 build 35 Google Secret Key now dynamic, not hard coded
+0.0.0 build 36 Changed login redirect from `servletContext().getRequestDispatcher(url).forward(request, response)` to `response.sendRedirect(path)`
