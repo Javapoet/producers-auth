@@ -330,8 +330,8 @@ public class LoginServlet extends ParentServlet {
                     logger.debug("redirect = "+redirect);
                     if(redirect != null) {
                         
-                        //response.sendRedirect(redirect);
-                        includeUtf8(request, response, redirect);
+                        response.sendRedirect(redirect);
+                        //includeUtf8(request, response, redirect);
 
                     } else {
                         includeUtf8(request, response, this.loggedInPage);
