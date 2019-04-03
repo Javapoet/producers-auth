@@ -186,8 +186,16 @@ public class LoginServlet extends ParentServlet {
 
         if(recaptchaResponse != null) {
 
+            String googleSecretKey = (String) getServletContext().getAttribute("googleSecretKey");
+            String googleSiteKey = (String) getServletContext().getAttribute("googleSiteKey");
+
+            logger.debug("googleSecretKey = "+googleSecretKey);
+            logger.debug("googleSiteKey = "+googleSiteKey);
+
             //boolean captchaValid = isCaptchaValid(secretKey, recaptchaResponse, remoteAddr);
-            boolean captchaValid = isCaptchaValid(secretKey, recaptchaResponse);
+            //boolean captchaValid = isCaptchaValid(secretKey, recaptchaResponse);
+            //boolean captchaValid = isCaptchaValid(googleSecretKey, recaptchaResponse, remoteAddr);
+            boolean captchaValid = isCaptchaValid(googleSecretKey, recaptchaResponse);
             logger.debug("captchaValid = "+captchaValid);
 
             if(!captchaValid) {
@@ -340,8 +348,8 @@ public class LoginServlet extends ParentServlet {
                     logger.debug("redirect = "+redirect);
                     if(redirect != null) {
                         
-                        //response.sendRedirect(redirect);
-                        includeUtf8(request, response, redirect);
+                        response.sendRedirect(redirect);
+                        //includeUtf8(request, response, redirect);
 
                     } else {
                         includeUtf8(request, response, this.loggedInPage);

@@ -84,7 +84,7 @@ public class ConfirmEmailServlet extends ParentServlet {
 
             } else {
 
-                logger.warn("User Not Found. Password reset token may have expired or been used already.");
+                logger.warn("User Not Found! Account activation token may have expired or has been used already.");
 
                 /*
                 java.util.ResourceBundle rb = null;
@@ -118,6 +118,8 @@ public class ConfirmEmailServlet extends ParentServlet {
                 String message = "Password reset token has expired or been used already.";
                 request.setAttribute("header", header);
                 request.setAttribute("message", message);
+                request.setAttribute("iconImage", "view/svg/producers-humming-bird1.svg");
+
 
                 /*
                 PrintWriter out = response.getWriter();
