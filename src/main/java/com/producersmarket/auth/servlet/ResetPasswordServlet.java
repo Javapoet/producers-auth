@@ -75,7 +75,7 @@ public class ResetPasswordServlet extends ParentServlet {
 
         if(email == null || email.equals(EMPTY)) {
 
-            request.setAttribute("emailError", "please Enter an Email Address");
+            request.setAttribute("emailError", "Please enter an email address");
             includeUtf8(request, response, "/view/reset-password.jsp");
             //includeUtf8(request, response, this.loginPage);
 
@@ -157,8 +157,8 @@ public class ResetPasswordServlet extends ParentServlet {
 
                 //request.setAttribute("errorMessage", "Incorrect password");
                 //request.setAttribute("passwordError", "Incorrect password");
-                request.setAttribute("usernameError", "Username does not exists");
-                request.setAttribute("emailError", "Email address does not exists");
+                request.setAttribute("usernameError", "Username does not exist");
+                request.setAttribute("emailError", "Email address does not exist");
                 //includeUtf8(request, response, this.loginPage);
                 includeUtf8(request, response, "/view/reset-password.jsp");
 
