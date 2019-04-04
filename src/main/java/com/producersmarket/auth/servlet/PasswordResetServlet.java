@@ -148,12 +148,10 @@ public class PasswordResetServlet extends ParentServlet {
         String code = request.getParameter("code");
         String hash = request.getParameter("hash");
 
-        String password = request.getParameter("password");
-
         logger.debug("code = "+code);
         logger.debug("hash = "+hash);
         
-        if( password == null || password.equals(EMPTY) ) {
+        if( hash == null || hash.equals(EMPTY) ) {
 
             String errorMessage = "Please enter a password";
             request.setAttribute("errorMessage", errorMessage);
