@@ -54,7 +54,7 @@ public class ConfirmEmailServlet extends ParentServlet {
             logger.debug("code = "+code);
 
             //User user = UserDatabaseManager.selectUserByPasswordResetCode(code);
-            int userId = ResetPasswordDatabaseManager.selectUserIdByPasswordResetCode(code, getConnectionManager());
+            int userId = ResetPasswordDatabaseManager.selectUserIdByPasswordResetCode(code, getConnectionPool());
 
             //if(user != null) {
             if(userId != -1) {
@@ -70,9 +70,7 @@ public class ConfirmEmailServlet extends ParentServlet {
 
                 httpSession.setAttribute("userId", userId);
 
-                
-
-                ResetPasswordDatabaseManager.deleteActivationCode(userId, getConnectionManager());  // Delete the reset code after it has been used.
+                ResetPasswordDatabaseManager.deleteActivationCode(userId, getConnectionPool());  // delete the reset code after it has been used
                 
                 //include(request, response, "/view/home.jsp", "text/html; charset=UTF-8");
                 //include(request, response, "/view/login.jsp", "text/html; charset=UTF-8");
@@ -114,8 +112,8 @@ public class ConfirmEmailServlet extends ParentServlet {
                 */
 
                 //String message = rb.getString(FORGOT_PASSWORD_USER_NOT_FOUND);
-                String header = "Password Reset";
-                String message = "Password reset token has expired or been used already.";
+                String header = "Whoops! Looks like this link has expired.";
+                String message = "Request a new <a href='reset-password'>reset link</a>";
                 request.setAttribute("header", header);
                 request.setAttribute("message", message);
                 request.setAttribute("iconImage", "view/svg/producers-humming-bird1.svg");
@@ -182,7 +180,7 @@ public class ConfirmEmailServlet extends ParentServlet {
                     logger.debug("userId = "+userId);
             */                    
 
-                    RegisterDatabaseManager.updateName(userId, name, getConnectionManager());
+                    RegisterDatabaseManager.updateName(userId, name, getConnectionPool());
 
                     //include(request, response, "/view/home.jsp");
                     includeUtf8(request, response, this.confirmEmailPage != null ? this.confirmEmailPage : "/view/confirm-email.jsp");
