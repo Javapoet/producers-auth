@@ -110,8 +110,8 @@ public class PasswordResetServlet extends ParentServlet {
                 */
 
                 //String message = rb.getString(FORGOT_PASSWORD_USER_NOT_FOUND);
-                String header = "Password Reset";
-                String message = "Password reset token has expired or been used already.";
+                String header = "Whoops! Looks like this link has expired.";
+                String message = "Request a new <a href='reset-password'>reset link</a>";
                 request.setAttribute("header", header);
                 request.setAttribute("message", message);
 
