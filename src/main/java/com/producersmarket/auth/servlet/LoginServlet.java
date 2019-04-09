@@ -253,6 +253,7 @@ public class LoginServlet extends ParentServlet {
                     //request.setAttribute("user", user);
 
                     java.util.List<Integer> groupIdList = user.getGroupIdList();
+                    
                     if(groupIdList != null) {
                         httpSession.setAttribute("groupIdList", groupIdList); // set the user groups on the session
                     }

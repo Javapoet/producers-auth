@@ -31,14 +31,24 @@ public class ResetPasswordServlet extends ParentServlet {
     private static final String LEFT_SQUARE_BRACKET = "[";
     private static final String RIGHT_SQUARE_BRACKET = "]";
 
-    private String loginPage = null;
+    private String loginPage = "/view/login.jsp";
+    private String resetPasswordEmailSentPage = "/view/confirmation/reset-password-email-sent.jsp";
+    private String resetPasswordPage = "/view/confirmation/reset-password-email-sent.jsp";
 
     public void init(ServletConfig config) throws ServletException {
         logger.debug("init("+config+")");
 
-        this.loginPage = config.getInitParameter("loginPage");
+        String loginPage = config.getInitParameter("loginPage");
+        if(loginPage != null) this.loginPage = loginPage;
+        logger.debug("this.loginPage = " + this.loginPage);
 
-        logger.debug("loginPage = "+loginPage);
+        String resetPasswordPage = config.getInitParameter("resetPasswordPage");
+        if(resetPasswordPage != null) this.resetPasswordPage = resetPasswordPage;
+        logger.debug("this.resetPasswordPage = " + this.resetPasswordPage);
+
+        String resetPasswordEmailSentPage = config.getInitParameter("resetPasswordEmailSentPage");
+        if(resetPasswordEmailSentPage != null) this.resetPasswordEmailSentPage = resetPasswordEmailSentPage;
+        logger.debug("this.resetPasswordEmailSentPage = " + this.resetPasswordEmailSentPage);
 
         super.init(config);
     }
@@ -56,7 +66,8 @@ public class ResetPasswordServlet extends ParentServlet {
 
             request.setAttribute("email", username);
 
-            includeUtf8(request, response, "/view/reset-password.jsp");
+            //includeUtf8(request, response, "/view/reset-password.jsp");
+            includeUtf8(request, response, this.resetPasswordPage);
 
         } catch(java.io.FileNotFoundException e) {
             StringWriter stringWriter = new StringWriter();
@@ -76,8 +87,8 @@ public class ResetPasswordServlet extends ParentServlet {
         if(email == null || email.equals(EMPTY)) {
 
             request.setAttribute("emailError", "please Enter an Email Address");
-            includeUtf8(request, response, "/view/reset-password.jsp");
-            //includeUtf8(request, response, this.loginPage);
+            //includeUtf8(request, response, "/view/reset-password.jsp");
+            includeUtf8(request, response, this.resetPasswordPage);
 
             return;
 
@@ -142,7 +153,8 @@ public class ResetPasswordServlet extends ParentServlet {
 
                     request.setAttribute("properties", properties);
 
-                    include(request, response, "/view/reset-password-email-sent.jsp");
+                    //include(request, response, "/view/confirmation/reset-password-email-sent.jsp");
+                    include(request, response, this.resetPasswordEmailSentPage);
 
                     return;
 
@@ -160,7 +172,8 @@ public class ResetPasswordServlet extends ParentServlet {
                 request.setAttribute("usernameError", "Username does not exists");
                 request.setAttribute("emailError", "Email address does not exists");
                 //includeUtf8(request, response, this.loginPage);
-                includeUtf8(request, response, "/view/reset-password.jsp");
+                //includeUtf8(request, response, "/view/reset-password.jsp");
+                includeUtf8(request, response, this.resetPasswordPage);
 
                 return;
 

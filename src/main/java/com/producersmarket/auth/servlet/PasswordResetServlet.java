@@ -37,6 +37,7 @@ public class PasswordResetServlet extends ParentServlet {
 
     private String passwordResetPage = "/view/password-reset.jsp";
     private String loginPage = "/view/login.jsp";
+    private String resetPasswordEmailSentPage = "/view/confirmation/reset-password-email-sent.jsp";
 
     public void init(ServletConfig config) throws ServletException {
         logger.debug("init("+config+")");
@@ -48,6 +49,10 @@ public class PasswordResetServlet extends ParentServlet {
         String loginPage = config.getInitParameter("loginPage");
         if(loginPage != null) this.loginPage = loginPage;
         logger.debug("this.loginPage = " + this.loginPage);
+
+        String resetPasswordEmailSentPage = config.getInitParameter("resetPasswordEmailSentPage");
+        if(resetPasswordEmailSentPage != null) this.resetPasswordEmailSentPage = resetPasswordEmailSentPage;
+        logger.debug("this.resetPasswordEmailSentPage = " + this.resetPasswordEmailSentPage);
 
         super.init(config);
     }
