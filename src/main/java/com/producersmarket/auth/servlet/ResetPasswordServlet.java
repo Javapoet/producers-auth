@@ -32,8 +32,8 @@ public class ResetPasswordServlet extends ParentServlet {
     private static final String RIGHT_SQUARE_BRACKET = "]";
 
     private String loginPage = "/view/login.jsp";
+    private String resetPasswordPage = "/view/reset-password.jsp";
     private String resetPasswordEmailSentPage = "/view/confirmation/reset-password-email-sent.jsp";
-    private String resetPasswordPage = "/view/confirmation/reset-password-email-sent.jsp";
 
     public void init(ServletConfig config) throws ServletException {
         logger.debug("init("+config+")");
