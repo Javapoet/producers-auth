@@ -58,7 +58,6 @@ public class RegisterMailer implements Runnable {
     private String body = null;
     private String bodyHtml = null;
     private String webAddress = null;
-    private String activationCode = null;
     private String contextUrl = null;
     private Properties properties = null;
     private PreparedEmail preparedEmail = null;

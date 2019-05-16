@@ -128,77 +128,38 @@ public class LoginDatabaseManager {
 
     public static String selectPasswordHashByEmail(String email, ConnectionPool connectionPool) throws SQLException, Exception {
         logger.debug("selectPasswordHashByEmail("+email+", ConnectionPool: "+connectionPool+")");
-
-        //ConnectionManager connectionManager = new ConnectionManager(className, com.producersmarket.servlet.InitServlet.connectionPool);
-        //ConnectionManager connectionManager = new ConnectionManager();
-        //ConnectionManager connectionManager = new ConnectionManager(className);
-        ConnectionManager connectionManager = new ConnectionManager(connectionPool);
-
-        return selectPasswordHashByEmail(email, connectionManager);
+        return selectPasswordHashByEmail(email, new ConnectionManager(connectionPool));
     }
 
     public static String selectPasswordHashByEmail(String email, ConnectionManager connectionManager) throws SQLException, Exception {
         logger.debug("selectPasswordHashByEmail("+email+", "+connectionManager+")");
-
         try {
-
-            //String sql = "SELECT password_hash FROM user WHERE email = ?";
-            //PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
             PreparedStatement preparedStatement = connectionManager.loadStatement("selectPasswordHashByEmail");
             preparedStatement.setString(1, email);
             ResultSet resultSet = preparedStatement.executeQuery();
-
             if(resultSet.next()) {
                 return resultSet.getString(1);
             }
-
         } finally {
             connectionManager.commit();
         }
-
         return null;
     }
 
     public static String selectPasswordHashByEmail(String email) throws SQLException, Exception {
-        logger.debug("selectPasswordHashByEmail('"+email+"')");
-
+        logger.debug("selectPasswordHashByEmail("+email+")");
         ConnectionManager connectionManager = new ConnectionManager(className);
-
         try {
-
-            //String sql = "SELECT password_hash FROM user WHERE email = ?";
-            //PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
             PreparedStatement preparedStatement = connectionManager.loadStatement("selectPasswordHashByEmail");
             preparedStatement.setString(1, email);
             ResultSet resultSet = preparedStatement.executeQuery();
-
             if(resultSet.next()) {
                 return resultSet.getString(1);
             }
-
         } finally {
             connectionManager.commit();
         }
-
         return null;
     }
-
-/*
-        } catch(Exception e) {
-            StringWriter stringWriter = new StringWriter();
-            PrintWriter printWriter = new PrintWriter(stringWriter);
-            e.printStackTrace(printWriter);
-            logger.error(stringWriter.toString());
-        } finally {
-            try {
-                connectionManager.commit();
-            } catch(Exception e) {
-                StringWriter stringWriter = new StringWriter();
-                PrintWriter printWriter = new PrintWriter(stringWriter);
-                e.printStackTrace(printWriter);
-                logger.error(stringWriter.toString());
-            }
-        }
-*/
 
 }

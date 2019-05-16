@@ -120,9 +120,7 @@ public class ResendEmailServlet extends ParentServlet {
                     try {
 
                         RegisterMailer.send(properties, preparedEmail);
-
-                        includeUtf8(request, response, "/view/register-confirmation.jsp");
-
+                        includeUtf8(request, response, "/view/confirmation/register-confirmation.jsp");
                         return;
 
                     } catch(Exception e) {

@@ -167,48 +167,17 @@ public class PasswordResetServlet extends ParentServlet {
 
             try {
     
-                //User user = UserDatabaseManager.selectUserByPasswordResetCode(code);
-                //int userId = ResetPasswordDatabaseManager.selectUserIdByPasswordResetCode(code);
                 int userId = ResetPasswordDatabaseManager.selectUserIdByPasswordResetCode(code, getConnectionPool());
     
-                //if(user != null) {
                 if(userId != -1) {
     
-                    /*
-                    String passwordHash = SecurityUtil.hashPassword(password);
-                    logger.debug("passwordHash = "+passwordHash);
-    
-                    // Some passwords are less than 40 characters
-                    int passwordHashLength = passwordHash.length();
-                    logger.debug("passwordHashLength = "+passwordHashLength);
-                    if(passwordHashLength < 40) {
-                        if(passwordHashLength == 39) {
-                            passwordHash = "0"+passwordHash;
-                        } else if(passwordHashLength == 38) {
-                            passwordHash = "00"+passwordHash;
-                        }
-                        logger.debug("passwordHash = "+passwordHash);
-                    }
-                    */
-    
-                    //ResetPasswordDatabaseManager.updatePassword(user.getId(), hash);
-                    //ResetPasswordDatabaseManager.updatePassword(userId, hash);
                     ResetPasswordDatabaseManager.updatePassword(userId, hash, getConnectionPool());
     
-                    //String message = "Your password has been reset.<br/>You can log in below.";
                     String message = "Your password has been reset.<br/>Please log in below.";
-    
                     request.setAttribute("message", message);
     
-                    //response.sendRedirect(com.ispaces.web.servlet.InitServlet.init.getProperty("contextUrl"));
-                    //response.sendRedirect(com.ispaces.web.servlet.InitServlet.init.getProperty("contextUrl")+"/admin/login");
-                    //include(request, response, DIR_VIEW+"admin/login.jsp", "text/html; charset=UTF-8");
-                    //include(request, response, "/view/login.jsp");
                     includeUtf8(request, response, this.loginPage);
     
-                    //ResetPasswordDatabaseManager.deleteActivationCode(user.getId(), code);  // Delete the reset code after it has been used.
-                    //ResetPasswordDatabaseManager.deleteActivationCode(user.getId());  // Delete the reset code after it has been used.
-                    //ResetPasswordDatabaseManager.deleteActivationCode(userId);  // Delete the reset code after it has been used.
                     ResetPasswordDatabaseManager.deleteActivationCode(userId, getConnectionPool());  // Delete the reset code after it has been used.
                 }
     
@@ -222,7 +191,6 @@ public class PasswordResetServlet extends ParentServlet {
                 include(request, response, this.passwordResetPage, "text/html; charset=UTF-8");
             }
         }
-
     }
 
 }

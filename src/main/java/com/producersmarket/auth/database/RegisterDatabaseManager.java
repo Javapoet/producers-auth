@@ -150,8 +150,6 @@ public class RegisterDatabaseManager {
 
         try {
 
-            //String sql = "UPDATE user SET activation_code=? WHERE email=?";
-            //PreparedStatement preparedStatement = connectionManager.prepareStatement(sql);
             PreparedStatement preparedStatement = connectionManager.loadStatement("updateActivationCode");
             preparedStatement.setString(1, null);
             preparedStatement.setString(2, email);

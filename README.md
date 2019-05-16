@@ -29,3 +29,4 @@
 0.0.0 build 36 Changed all database manager classes to use ConnectionPool
 0.0.0 build 37 Changed login redirect from `servletContext().getRequestDispatcher(url).forward(request, response)` to `response.sendRedirect(path)`
 0.0.0 build 38 Made resetPasswordEmailSentPage dynamic with default /view/confirmation/reset-password-email-sent.jsp
+0.0.0 build 39 Added emailVerified
